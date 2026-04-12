@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>企业数字大脑 - 在线体验</title>
+
+  <!-- 【重点】所有CSS路径全部改成Flask正确格式 -->
+<!--  <link href="{{ url_for('static', filename='css/css2.css') }}" rel="stylesheet">-->
+<!--  <link rel="shortcut icon" href="{{ url_for('static', filename='image/favicon.png') }}" type="image/x-icon">-->
+<!--  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">-->
+<!--  <link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}">-->
+<!--  <link rel="stylesheet" href="{{ url_for('static', filename='css/animate.min.css') }}">-->
+<!--  <link rel="stylesheet" href="{{ url_for('static', filename='css/venobox.min.css') }}">-->
+<!--  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">-->
+<!--  <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">-->
+
+    <link href="../static/css/css2.css" rel="stylesheet">
+  <link rel="shortcut icon" href="./assets/image/favicon.png" type="image/x-icon">
+  <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/css/all.min.css">
+  <link rel="stylesheet" href="../static/css/animate.min.css">
+  <link rel="stylesheet" href="../static/css/venobox.min.css">
+  <link rel="stylesheet" href="../static/css/style.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+
+
+  <style>
+    /* 全局样式和帮助中心完全一致 */
+    :root {
+      --cyber-purple: #9333EA;
+      --cyber-blue: #3B82F6;
+      --cyber-pink: #EC4899;
+      --dark-bg: #0F0529;
+    }
+    body {
+      background-color: var(--dark-bg) !important;
+      color: #fff !important;
+    }
+    .navbar-nav .nav-link {
+      color: #fff !important;
+    }
+    .navbar-nav .nav-link.active {
+      background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple)) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      font-weight: 600;
+    }
+    .banner-text h1 {
+      background: linear-gradient(90deg, #fff, var(--cyber-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .banner-text a.active {
+      background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* 卡片样式和帮助中心完全一致 */
+    .help-card {
+      border: 2px solid;
+      border-image: linear-gradient(90deg, var(--cyber-blue), var(--cyber-pink)) 1 !important;
+      border-radius: 12px !important;
+      overflow: hidden;
+      padding: 30px;
+      background: rgba(255,255,255,0.05);
+    }
+    .form-label {
+      color: #fff !important;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .form-control {
+      background: rgba(255,255,255,0.1) !important;
+      border: 1px solid var(--cyber-blue) !important;
+      color: #fff !important;
+      padding: 10px 15px;
+      border-radius: 6px;
+    }
+    .form-text {
+      color: rgba(255,255,255,0.6) !important;
+    }
+
+    /* 按钮样式完全统一 */
+    .shadow__btn {
+      background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple)) !important;
+      border: none !important;
+      color: #fff !important;
+      padding: 12px 20px;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+    .shadow__btn:hover {
+      background: linear-gradient(90deg, var(--cyber-purple), var(--cyber-pink)) !important;
+      color: #fff !important;
+    }
+    .shadow__btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* 分析结果展示区 */
+    #resultArea {
+      display: none;
+      margin-top: 30px;
+    }
+    .result-card {
+      border: 2px solid;
+      border-image: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple)) 1 !important;
+      border-radius: 12px;
+      padding: 25px;
+      background: rgba(255,255,255,0.05);
+    }
+    .loading-text {
+      text-align: center;
+      color: var(--cyber-blue);
+      font-size: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 导航栏 -->
+  <nav class="navbar navbar-expand-md main-menu">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <img src="../static/picture/logo-10.png" alt="">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">项目介绍</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="service.html">核心功能</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="gallery.html">数据可视化</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="experience.html">在线体验</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="help.html">帮助中心</a>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="modal" data-bs-target="#searchModal">
+              <i class="fa fa-search"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 搜索弹窗 -->
+  <div class="modal fade" id="searchModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">搜索</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <input type="text" class="form-control" placeholder="输入搜索内容...">
+            </div>
+            <button type="submit" class="shadow__btn w-100">搜索</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Banner 【重点】背景图路径改成正确的static路径 -->
+  <section id="banner" class="cmn-banner" style="background: url(../static/image/banner.jpg) no-repeat center/cover;">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="wow animate__animated animate__fadeInLeft banner-text">
+            <h1>在线体验</h1>
+            <a href="../templates/index.html">首页 |</a> <a class="active" href="../templates/experience.html"> 在线体验</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 上传表单区域 -->
+  <section id="gallery">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="wow animate__animated animate__fadeInUp col-lg-8">
+          <div class="help-card">
+            <form id="uploadForm" method="POST" action="/api/analyze">
+              <div class="mb-4">
+                <label class="form-label">企业名称</label>
+                <input type="text" class="form-control" id="companyName" name="company_name" placeholder="请输入企业名称" required>
+              </div>
+              <div class="mb-4">
+                <label class="form-label">上传财务 Excel 文件</label>
+                <input type="file" class="form-control" id="excelFile" name="file" accept=".xlsx,.xls" required>
+                <div class="form-text">支持 xlsx / xls 格式，包含收入、支出、利润、负债等财务字段</div>
+              </div>
+              <button type="submit" class="shadow__btn w-100" id="submitBtn">开始智能分析</button>
+            </form>
+          </div>
+
+          <!-- 分析结果展示区 -->
+          <div id="resultArea">
+            <div class="result-card">
+              <h3 style="background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));-webkit-background-clip: text;-webkit-text-fill-color: transparent;">
+                智能分析结果
+              </h3>
+              <div id="resultContent" class="mt-3">
+                <!-- 后端返回的结果会在这里展示 -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="footer-section">
+    <div class="container">
+      <div class="wow animate__animated animate__fadeInUp footer-content pt-5 pb-5">
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="footer-widget">
+              <a class="navbar-brand" href="/">
+                <img src="../static/picture/logo-10.png" alt="">
+              </a>
+              <p class="mt-3">企业数字大脑 | 2026大数据主题赛参赛作品，多智能体驱动企业运营分析与决策支持。</p>
+              <div class="social-icon d-flex">
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="footer-widget">
+              <h3>快速导航</h3>
+              <ul>
+                <li><a href="../templates/index.html">首页</a></li>
+                <li><a href="../templates/about.html">项目介绍</a></li>
+                <li><a href="../templates/service.html">核心功能</a></li>
+                <li><a href="../templates/gallery.html">数据可视化</a></li>
+                <li><a href="../templates/experience.html">在线体验</a></li>
+                <li><a href="../templates/help.html">帮助中心</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="footer-widget">
+              <h3>订阅更新</h3>
+              <p>订阅获取系统最新功能与大数据领域前沿资讯。</p>
+              <div class="subscribe-form">
+                <form>
+                  <input type="text" placeholder="输入邮箱地址">
+                  <button class="shadow__btn"><i class="fab fa-telegram-plane"></i></button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="copyright-area">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 text-center text-lg-left">
+            <p>Copyright © 2026 企业数字大脑 | 大数据主题赛 保留所有权利</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 【重点】所有JS路径全部改成Flask正确格式 -->
+  <script src="../static/js/jquery-1.12.4.min.js"></script>
+  <script src="../static/js/bootstrap.min.js"></script>
+  <script src="../static/js/wow.min.js"></script>
+  <script src="../static/js/script.js"></script>
+
+  <!-- 核心对接接口的JS代码 -->
+  <!-- <script>
+    $(function() {
+      // 表单提交事件
+      $('#uploadForm').on('submit', function(e) {
+        e.preventDefault(); // 阻止表单默认刷新
+
+        // 获取表单数据
+        const formData = new FormData(this);
+        const submitBtn = $('#submitBtn');
+        const resultArea = $('#resultArea');
+        const resultContent = $('#resultContent');
+
+        // 按钮禁用，显示加载状态
+        submitBtn.attr('disabled', true).text('正在智能分析中...');
+        resultArea.hide();
+
+        // 调用后端接口
+        $.ajax({
+          url: '/api/analyze', // 对应Flask里的接口地址
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function(res) {
+            if (res.code === 200) {
+              // 分析成功，展示结果
+              const data = res.data;
+              resultContent.html(`
+                <p><strong>企业名称：</strong>${data.company_name}</p>
+                <p><strong>企业健康评分：</strong>${data.health_score || '暂无'}</p>
+                <p><strong>风险预警：</strong>${data.risk_warning || '暂无'}</p>
+                <h5 class="mt-3">详细分析报告：</h5>
+                <pre style="color:#fff;white-space:pre-wrap;background:rgba(0,0,0,0.2);padding:15px;border-radius:6px;">${JSON.stringify(data.analysis_result, null, 2)}</pre>
+              `);
+              resultArea.show();
+              alert('分析完成！');
+            } else {
+              alert(res.msg);
+            }
+          },
+          error: function(err) {
+            alert('分析失败，请重试！');
+            console.error(err);
+          },
+          complete: function() {
+            // 恢复按钮状态
+            submitBtn.attr('disabled', false).text('开始智能分析');
+          }
+        });
+      });
+    });
+  </script> -->
+</body>
+</html>

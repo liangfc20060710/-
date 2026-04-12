@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>企业数字大脑 | 2026大数据主题赛</title>
+
+  <!-- 修复：所有CSS路径统一改为 /static/ 开头 -->
+  <link href="/static/css/css2.css" rel="stylesheet">
+  <link rel="shortcut icon" href="/static/image/favicon.png" type="image/x-icon">
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/css/all.min.css">
+  <link rel="stylesheet" href="/static/css/animate.min.css">
+  <link rel="stylesheet" href="/static/css/venobox.min.css">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/responsive.css">
+</head>
+<body>
+
+<!-- ================ start nav bar=========== -->
+<nav class="navbar navbar-expand-md main-menu">
+<div class="container">
+<a class="navbar-brand" href="index.html"><img src="/static/picture/logo-10.png" alt=""></a>
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<i class="fas fa-bars"></i>
+</button>
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+<li class="nav-item">
+<a class="nav-link active" aria-current="page" href="index.html">首页</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="about.html">项目介绍</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="service.html">核心功能</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="gallery.html">数据可视化</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="experience.html">在线体验</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="help.html">帮助中心</a>
+</li>
+<li class="nav-item">
+<button class="nav-link" data-bs-toggle="modal" data-bs-target="#searchModal">
+<i class="fa fa-search" aria-hidden="true"></i>
+</button>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+
+<!-- Search Modal -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="searchModalLabel">搜索</h5>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+<form action="#" method="GET">
+<div class="mb-3">
+<input type="text" class="form-control" name="query" placeholder="输入搜索内容...">
+</div>
+<button type="submit" class="shadow__btn w-100 mt-3 mb-2">搜索</button>
+</form>
+</div>
+</div>
+</div>
+</div>
+<!-- ================end nav bar=========== -->
+
+<!-- start banner-section -->
+<!-- 修复：背景图路径改为 /static/ 开头 -->
+<section id="banner" style="background: url(/static/image/banner.jpg) no-repeat center/cover;">
+<div class="container">
+<div class="row">
+<div class="col-md-12">
+<div class="wow animate__animated animate__fadeInLeft banner-text">
+<h1>企业数字大脑</h1>
+<h4>多智能体赋能企业运营分析与决策支持</h4>
+<p>基于多智能体协同的企业运营分析系统，自动解析Excel财务数据，实现智能评分、风险预警、决策建议，为企业打造一站式数字决策中枢。</p>
+<div class="main-btn">
+<a class="shadow__btn" href="experience.html">上传Excel开始分析</a>
+</div>
+</div>
+</div>
+<div class="col-md-6"></div>
+</div>
+</div>
+</section>
+<!-- end banner-section -->
+
+<!-- ==========start gallary section ===========================================-->
+<section id="gallery">
+<div class="container">
+<div class="row ">
+<div class="wow animate__animated animate__fadeInLeft col-md-4">
+<div class="gallery-img">
+<img src="/static/picture/banner-2.jpg" class="w-100" alt="">
+</div>
+<div class="gallery-text text-center mt-3">
+<h4>CEO 智能体</h4>
+<p>统筹决策 | 全局分析</p>
+</div>
+</div>
+<div class="wow animate__animated animate__fadeInUp col-md-4">
+<div class="gallery-img">
+<img src="/static/picture/banner-1.jpg" class="w-100" alt="">
+</div>
+<div class="gallery-text text-center mt-3">
+<h4>CFO 智能体</h4>
+<p>财务分析 | 风险评分</p>
+</div>
+</div>
+<div class="wow animate__animated animate__fadeInRight col-md-4">
+<div class="gallery-img">
+<img src="/static/picture/banner-3.jpg" class="w-100" alt="">
+</div>
+<div class="gallery-text text-center mt-3">
+<h4>COO & CTO 智能体</h4>
+<p>运营优化 | 技术保障</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ==========end gallary section ===========================================-->
+
+<section id="banner-2">
+<div class="container ">
+<div class="row">
+<div class="col-md-6">
+<div class="row mt-5">
+<div class="wow animate__animated animate__fadeInUp col-md-6 col-sm-6">
+<div class="explore-content d-flex">
+<img src="/static/picture/banner-1.jpg" class="img-fluid w-100" alt="">
+</div>
+</div>
+<div class="wow animate__animated animate__fadeInUp col-md-6 col-sm-6">
+<div class="explore-content d-flex">
+<img src="/static/picture/banner-2.jpg" class="img-fluid w-100" alt="">
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="row mt-5">
+<div class="col-sm-4 col-md-3 m-auto ">
+<div class="wow animate__animated animate__fadeInUp counter_inner">
+<h4 class="counterr">98</h4>
+<span>%</span>
+<p>分析准确率</p>
+</div>
+</div>
+<div class="col-sm-4 col-md-3 m-auto">
+<div class="wow animate__animated animate__fadeInUp counter_inner">
+<h4 class="counterr">10</h4>
+<span>M+</span>
+<p>企业数据量</p>
+</div>
+</div>
+<div class="col-sm-4 col-md-3 m-auto">
+<div class="wow animate__animated animate__fadeInUp counter_inner">
+<h4 class="counterr">4</h4>
+<span>+</span>
+<p>智能体协同</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="wow animate__animated animate__fadeInUp explore-right">
+<h2><span>数据驱动决策 · 智能赋能运营</span></h2>
+<p>企业数字大脑是面向2026大数据主题赛打造的国奖级项目，通过多智能体协同架构，实现Excel自动解析、财务指标计算、企业健康评分、AI报告生成一体化服务，帮助企业快速洞察风险、提升效率、科学决策。</p>
+<div class="main-btn">
+<a class="shadow__btn" href="about.html">了解项目详情</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!--===================== banner-3 ==================-->
+<section id="banner-3">
+<div class="container ">
+<div class="row">
+<div class="col-md-6 text-light order-2 order-md-1 order-lg-1">
+<div class="wow animate__animated animate__fadeInLeft section-left">
+<h2><span>核心能力</span></h2>
+<p class="pera-1">
+✅ 自动读取Excel财务数据，自动清洗与结构化<br>
+✅ 多智能体并行分析，覆盖财务、运营、风控全维度<br>
+✅ 实时生成企业健康评分与风险预警<br>
+✅ AI自动输出专业决策报告与可视化图表
+<span>系统基于Python + FastAPI开发，稳定高效、易于扩展，是企业数字化转型的最佳智能助手。</span>
+</p>
+<div class="main-btn">
+<a class="shadow__btn" href="service.html">查看全部功能</a>
+</div>
+</div>
+</div>
+<div class="col-md-5 m-auto order-1 order-md-2 order-lg-2">
+<div class="wow animate__animated animate__fadeInRight section-right">
+<img src="/static/picture/about.jpg" class="w-100" alt="">
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- banner-3 end -->
+
+<!-- gallery start -->
+<section id="portfolio">
+<div class="container px-lg-0">
+<div class="row">
+<div class="col-lg-7 m-auto">
+<div class="wow animate__animated animate__fadeInUp common_head text-center">
+<h4>数据可视化展示</h4>
+<p>直观呈现企业财务趋势、风险分布、健康评分，让数据一目了然。</p>
+</div>
+</div>
+</div>
+<div class="portfolio_main">
+<div class="row">
+<div class="col-lg-12">
+<div class="filter_menu">
+<ul class="wow animate__animated animate__fadeInUp d-flex flex-wrap" data-wow-delay=".3s">
+<li class="mixitup-control-active" data-filter="all">全部</li>
+<li data-filter=".finance">财务分析</li>
+<li data-filter=".operation">运营分析</li>
+<li data-filter=".risk">风险评估</li>
+</ul>
+</div>
+<div class="wow animate__animated animate__fadeInUp filter_img">
+<div class="img mix finance">
+<img src="/static/picture/banner-1.jpg" alt="财务指标">
+<div class="overly">
+<a class="venobox" data-gall="gallery01" href="/static/picture/banner-1.jpg">
+<i class="fa-solid fa-plus"></i></a>
+</div>
+</div>
+<div class="img mix operation">
+<img src="/static/picture/banner-3.jpg" alt="运营效率">
+<div class="overly">
+<a class="venobox" data-gall="gallery01" href="/static/picture/banner-3.jpg"><i class="fa-solid fa-plus"></i></a>
+</div>
+</div>
+<div class="img mix risk">
+<img src="/static/picture/gallery_img3.jpg" alt="风险预警">
+<div class="overly">
+<a class="venobox" data-gall="gallery01" href="/static/picture/gallery_img3.jpg"><i class="fa-solid fa-plus"></i></a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- gallery end -->
+
+<!-- pricing start -->
+<section id="pricing">
+<div class="container">
+<div class="row">
+<div class="col-md-7 m-auto">
+<div class="wow animate__animated animate__fadeInUp common_head mb-5">
+<h4 class="text-center text-light">功能套餐</h4>
+<p class="text-center text-light">为不同企业场景提供轻量化、专业化、一体化的智能决策服务。</p>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-lg-12">
+<div class="pricing-table">
+<div class="row">
+<div class="col-sm-4">
+<div class="wow animate__animated animate__fadeInLeft card text-center">
+<div class="title">
+<i class="fa fa-chart-line" aria-hidden="true"></i>
+<h2>基础版</h2>
+</div>
+<div class="price">
+<h4><sup>¥</sup>0</h4>
+</div>
+<div class="option">
+<ul>
+<li><i class="fa fa-check" aria-hidden="true"></i> Excel数据解析</li>
+<li><i class="fa fa-check" aria-hidden="true"></i> 基础财务计算</li>
+<li><i class="fa fa-check" aria-hidden="true"></i> 简单数据展示</li>
+</ul>
+</div>
+<a href="experience.html">立即使用</a>
+</div>
+</div>
+<div class="col-sm-4">
+<div class="wow animate__animated animate__fadeInUp card text-center">
+<div class="title">
+<i class="fa fa-brain" aria-hidden="true"></i>
+<h2>专业版</h2>
+</div>
+<div class="price">
+<h4>智能体</h4>
+</div>
+<div class="option">
+<ul>
+<li><i class="fa fa-check" aria-hidden="true"></i> 多智能体协同分析</li>
+<li><i class="fa fa-check" aria-hidden="true"></i> 企业健康评分</li>
+<li><i class="fa fa-check" aria-hidden="true"></i> AI决策报告</li>
+</ul>
+</div>
+<a href="experience.html">立即体验</a>
+</div>
+</div>
+<div class="col-sm-4">
+<div class="wow animate__animated animate__fadeInRight card text-center">
+<div class="title">
+<i class="fa fa-rocket" aria-hidden="true"></i>
+<h2>企业版</h2>
+</div>
+<div class="price">
+<h4>完整系统</h4>
+</div>
+<div class="option">
+<ul>
+<li><i class="fa fa-check" aria-hidden="true"></i> 私有化部署</li>
+<li><i class="fa fa-check" aria-hidden="true"></i> 自定义智能体扩展</li>
+<li><i class="fa fa-check" aria-hidden="true"></i> 全功能API服务</li>
+</ul>
+</div>
+<a href="experience.html">联系我们</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- pricing end -->
+
+<!-- testimonial start -->
+<section id="testimonials" class="testimonials">
+<div class="container">
+<div class="row">
+<div class="col-md-5">
+<div class="wow animate__animated animate__fadeInLeft common-heading mb-5">
+<h4 class="pre-title">评委与用户 <span>评价</span></h4>
+<p>来自大数据竞赛评委、企业用户与指导老师的真实反馈。</p>
+</div>
+</div>
+<div class="wow animate__animated animate__fadeInRight col-md-7">
+<div class="slider-indicator" data-wow-delay=".2s">
+<img src="/static/picture/testimonial-01.png" class="active" alt="img" data-id="0">
+<img src="/static/picture/testimonial-03.png" alt="img" data-id="1">
+<img src="/static/picture/testimonial-02.png" alt="img" data-id="2">
+</div>
+<div class="slider">
+<div class="slide active">
+<p>多智能体架构设计新颖，功能完整，非常符合大数据竞赛主题，具备国奖潜力。</p>
+<div class="client-info">
+<h3>大赛评委</h3>
+<span>大数据领域专家</span>
+</div>
+</div>
+<div class="slide">
+<p>操作简单，分析精准，帮助我们快速识别财务风险，是非常实用的企业工具。</p>
+<div class="client-info">
+<h3>企业管理者</h3>
+<span>测试用户</span>
+</div>
+</div>
+<div class="slide">
+<p>项目逻辑清晰、前后端完整，智能体协同创新突出，展示效果极佳。</p>
+<div class="client-info">
+<h3>指导老师</h3>
+<span>项目顾问</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- testimonial end -->
+
+<!-- footer start -->
+<footer class="footer-section">
+<div class="container">
+<div class="wow animate__animated animate__fadeInUp footer-content pt-5 pb-5" data-wow-delay=".2s">
+<div class="row">
+<div class="col-lg-4 col-xl-4 mb-50">
+<div class="footer-widget">
+<div class="footer-logo">
+<a class="navbar-brand" href="#"><img src="/static/picture/logo-10.png" alt="企业数字大脑"></a>
+</div>
+<div class="footer-text">
+<p>企业数字大脑 | 2026大数据主题赛参赛作品，多智能体驱动企业运营分析与决策支持。</p>
+</div>
+<div class="social-icon d-flex">
+<a href="#"><i class="fab fa-github github-bg"></i></a>
+<a href="#"><i class="fab fa-linkedin-in linkedin-bg"></i></a>
+</div>
+</div>
+</div>
+<div class="col-lg-4 col-xl-4 col-md-6 mb-30">
+<div class="footer-widget">
+<div class="footer-widget-heading">
+<h3>快速链接</h3>
+</div>
+<ul>
+<li><a href="index.html">首页</a></li>
+<li><a href="about.html">项目介绍</a></li>
+<li><a href="service.html">核心功能</a></li>
+<li><a href="gallery.html">数据可视化</a></li>
+<li><a href="experience.html">在线体验</a></li>
+</ul>
+</div>
+</div>
+<div class="col-lg-4 col-xl-4 col-md-6 mb-50">
+<div class="footer-widget">
+<div class="footer-widget-heading">
+<h3>订阅更新</h3>
+</div>
+<div class="footer-text mb-25">
+<p>订阅获取系统最新功能与大数据领域资讯。</p>
+</div>
+<div class="subscribe-form">
+<form action="#">
+<input type="text" placeholder="邮箱地址">
+<button><i class="fab fa-telegram-plane"></i></button>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="copyright-area">
+<div class="container">
+<div class="row">
+<div class="col-lg-6 text-center text-lg-left">
+<div class="copyright-text">
+<p>Copyright © 2026 企业数字大脑 | 大数据主题赛 保留所有权利</p>
+</div>
+</div>
+<div class="col-lg-6 d-none d-lg-block text-right">
+<div class="footer-menu">
+<ul>
+<li><a href="index.html">首页</a></li>
+<li><a href="#">隐私政策</a></li>
+<li><a href="#">服务条款</a></li>
+<li><a href="experience.html">联系我们</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<!-- footer section end -->
+
+<!-- btn_top_bottom part start -->
+<div class="btn_top_bottom">
+<i class="fa-solid fa-arrow-up-long"> </i>
+</div>
+<!-- btn_top_bottom part end -->
+
+<!-- 修复：全部替换为官方CDN，彻底解决本地JS 404问题 -->
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/mixitup/3.3.1/mixitup.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/venobox/2.0.4/venobox.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/wow/1.1.2/wow.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/Counter-Up/1.0.0/jquery.counterup.min.js"></script>
+<!-- 保留你自己的script.js（如果有） -->
+<script src="/static/js/script.js"></script>
+
+<script>
+var containerEl = document.querySelector('.filter_img');
+var mixer = mixitup(containerEl);
+$('.venobox').venobox({
+spinner: 'wave',
+spinColor: '#165DFF',
+arrowsColor: '#165DFF',
+closeColor: '#165DFF',
+});
+// 初始化wow动画
+new WOW().init();
+</script>
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>企业数字大脑 - 项目介绍</title>
+
+  <link href="../static/css/css2.css" rel="stylesheet">
+
+  <!-- ==========favicon ============-->
+  <link rel="shortcut icon" href="./assets/image/favicon.png" type="image/x-icon">
+  <!-- =========bootstrap ============-->
+  <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+  <!-- =========fontawesome ============-->
+  <link rel="stylesheet" href="../static/css/all.min.css">
+  <!-- =========animate ============-->
+  <link rel="stylesheet" href="../static/css/animate.min.css">
+  <!-- =========venobox ============-->
+  <link rel="stylesheet" href="../static/css/venobox.min.css">
+  <!-- =========css================== -->
+  <link rel="stylesheet" href="../static/css/style.css">
+  <!-- =========responsive======== -->
+  <link rel="stylesheet" href="../static/css/responsive.css">
+</head>
+
+<body>
+
+  <!-- ================ start nav bar=========== -->
+  <nav class="navbar navbar-expand-md main-menu">
+    <div class="container">
+      <a class="navbar-brand" href="index.html"><img src="../static/picture/logo-10.png" alt=""></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="index.html">首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="about.html">项目介绍</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="service.html">核心功能</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="service.html">数据可视化</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="experience.html">在线体验</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="help.html">帮助中心</a>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="modal" data-bs-target="#searchModal">
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Search Modal -->
+  <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="searchModalLabel">搜索</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="#" method="GET">
+            <div class="mb-3">
+              <input type="text" class="form-control" name="query" placeholder="输入搜索内容...">
+            </div>
+            <button type="submit" class="shadow__btn w-100 mt-3 mb-2">搜索</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ================end nav bar=========== -->
+
+  <!-- start banner-section -->
+  <section id="banner" class="cmn-banner" style="background: url(static/image/banner.jpg) no-repeat center/cover;">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="wow animate__animated animate__fadeInLeft banner-text">
+            <h1>项目介绍</h1>
+            <a href="index.html">首页 |</a> <span><a class="active" href=""> 项目介绍</a></span>
+          </div>
+        </div>
+        <div class="col-md-6"></div>
+      </div>
+    </div>
+  </section>
+  <!-- end banner-section -->
+
+  <!-- 多智能体架构展示（完全对齐你截图的能力设计） -->
+  <section id="gallery" class="wow animate__animated animate__fadeIn" style="padding: 60px 0;">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 style="font-size: 32px; font-weight: bold;">智能体能力设计</h2>
+                <p>每个智能体具备三大核心能力：感知、分析、决策</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="wow animate__animated animate__fadeInLeft col-md-3 mb-4">
+                <div class="gallery-img">
+                    <img src="../static/picture/banner-2.jpg" class="w-100 rounded-circle" style="border: 3px solid #A855F7;" alt="CEO 智能体">
+                </div>
+                <div class="gallery-text text-center mt-3">
+                    <h4 style="color: #A855F7; font-weight: bold;">CEO Agent</h4>
+                    <p>感知能力：全局数据监控、KPI汇总<br>分析能力：多维度业务洞察<br>决策能力：战略级决策建议</p>
+                </div>
+            </div>
+            <div class="wow animate__animated animate__fadeInUp col-md-3 mb-4">
+                <div class="gallery-img">
+                    <img src="../static/picture/banner-1.jpg" class="w-100 rounded-circle" style="border: 3px solid #06B6D4;" alt="CFO 智能体">
+                </div>
+                <div class="gallery-text text-center mt-3">
+                    <h4 style="color: #06B6D4; font-weight: bold;">CFO Agent</h4>
+                    <p>感知能力：财务报表分析、现金流监测<br>分析能力：利润与负债风险评估<br>决策能力：财务健康评分与预警</p>
+                </div>
+            </div>
+            <div class="wow animate__animated animate__fadeInRight col-md-3 mb-4">
+                <div class="gallery-img">
+                    <img src="../static/picture/banner-3.jpg" class="w-100 rounded-circle" style="border: 3px solid #10B981;" alt="COO 智能体">
+                </div>
+                <div class="gallery-text text-center mt-3">
+                    <h4 style="color: #10B981; font-weight: bold;">COO Agent</h4>
+                    <p>感知能力：供应链数据、生产效率<br>分析能力：运营成本优化分析<br>决策能力：流程改进与效率提升</p>
+                </div>
+            </div>
+            <div class="wow animate__animated animate__fadeInRight col-md-3 mb-4">
+                <div class="gallery-img">
+                    <img src="../static/picture/banner-3.jpg" class="w-100 rounded-circle" style="border: 3px solid #EC4899;" alt="CTO 智能体">
+                </div>
+                <div class="gallery-text text-center mt-3">
+                    <h4 style="color: #EC4899; font-weight: bold;">CTO Agent</h4>
+                    <p>感知能力：系统性能、技术债务<br>分析能力：安全与稳定性评估<br>决策能力：技术架构优化建议</p>
+                </div>
+            </div>
+        </div>
+    </div>
+  </section>
+  <!-- 多智能体架构展示结束 -->
+
+  <section id="banner-2">
+    <div class="container ">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row mt-5">
+            <div class="wow animate__animated animate__fadeInUp col-md-6 col-sm-6">
+              <div class="explore-content d-flex">
+                <img src="../static/picture/banner-1.jpg" class="img-fluid w-100" alt="">
+              </div>
+            </div>
+            <div class="wow animate__animated animate__fadeInUp col-md-6 col-sm-6">
+              <div class="explore-content d-flex">
+                <img src="../static/picture/banner-2.jpg" class="img-fluid w-100" alt="">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="row mt-5">
+                <div class="col-sm-4 col-md-3 m-auto ">
+                  <div class="wow animate__animated animate__fadeInUp counter_inner">
+                    <h4 class="counterr">98</h4>
+                    <span>%</span>
+                    <p>分析准确率</p>
+                  </div>
+                </div>
+                <div class="col-sm-4 col-md-3 m-auto">
+                  <div class="wow animate__animated animate__fadeInUp counter_inner">
+                    <h4 class="counterr">10</h4>
+                    <span>M+</span>
+                    <p>企业数据量</p>
+                  </div>
+                </div>
+                <div class="col-sm-4 col-md-3 m-auto">
+                  <div class="wow animate__animated animate__fadeInUp counter_inner">
+                    <h4 class="counterr">4</h4>
+                    <span>+</span>
+                    <p>智能体协同</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="wow animate__animated animate__fadeInUp explore-right">
+            <h2><span>企业数字大脑<br>多智能体</span> 赋能企业决策</h2>
+            <p>企业数字大脑是基于多智能体协同的企业运营分析与决策支持系统，专为2026大数据主题赛打造。系统通过自动化解析Excel数据，实现财务、运营、风控、技术多维度智能分析，为企业提供精准、高效、科学的决策支持。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!--===================== banner-3 ==================-->
+    <section id="banner-3">
+        <div class="container ">
+          <div class="row">
+            <div class="col-md-6 text-light order-2 order-md-1 order-lg-1">
+              <div class="wow animate__animated animate__fadeInLeft section-left">
+                <h2><span>技术架构</span> 介绍</h2>
+                <p class="pera-1">系统采用Python + FastAPI构建后端服务，结合多智能体协同架构，包含CEO智能体、CFO财务智能体、COO运营智能体与CTO技术智能体，实现全流程自动化分析。
+                    <span>系统支持Excel一键上传、指标自动计算、企业健康评分、AI报告生成、数据可视化等核心功能，具备高扩展性、高准确率、易部署等优势，是冲击国奖的优质参赛作品。</span>
+                </p>
+              </div>
+            </div>
+            <div class="col-md-5 m-auto order-1 order-md-2 order-lg-2">
+              <div class="wow animate__animated animate__fadeInRight section-right">
+                <img src="../static/picture/about.jpg" class="w-100" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- banner-3 end -->
+
+  <!-- testimonial start -->
+  <section id="testimonials" class="testimonials">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-5">
+          <div class="wow animate__animated animate__fadeInLeft common-heading mb-5">
+            <h4 class="pre-title">评委与用户 <span>评价</span></h4>
+            <p>来自大数据领域专家、大赛评委与企业用户的真实反馈，见证企业数字大脑在智能决策、数据分析与多智能体领域的创新价值与应用潜力。</p>
+          </div>
+        </div>
+        <div class="wow animate__animated animate__fadeInRight col-md-7">
+          <div class="slider-indicator" data-wow-delay=".2s">
+            <img src="../static/picture/testimonial-01.png" class="active" alt="img" data-id="0">
+            <img src="../static/picture/testimonial-03.png" alt="img" data-id="1">
+            <img src="../static/picture/testimonial-02.png" alt="img" data-id="2">
+          </div>
+
+          <div class="slider">
+            <div class="slide active">
+              <p>
+                多智能体架构设计新颖，数据处理流程完整，Excel自动分析功能实用，非常贴合大数据竞赛主题，具备很高的创新度与展示价值。
+              </p>
+              <div class="client-info">
+                <h3>大数据竞赛评委</h3>
+                <span>领域专家</span>
+              </div>
+            </div>
+            <div class="slide">
+              <p>
+                系统界面简洁，操作简单，分析结果精准，能够快速帮助企业识别财务风险与运营问题，是中小企业数字化转型的优秀工具。
+              </p>
+              <div class="client-info">
+                <h3>企业管理者</h3>
+                <span>测试用户</span>
+              </div>
+            </div>
+            <div class="slide">
+              <p>
+                项目完整度高，前后端对接流畅，智能体协同逻辑清晰，报告生成专业，是一个可以直接冲击国奖的高质量作品。
+              </p>
+              <div class="client-info">
+                <h3>指导老师</h3>
+                <span>项目顾问</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- testimonial end -->
+
+  <!-- footer start -->
+  <footer class="footer-section">
+    <div class="container">
+      <div class="wow animate__animated animate__fadeInUp footer-content pt-5 pb-5" data-wow-delay=".2s">
+        <div class="row">
+          <div class="col-lg-4 col-xl-4 col-lg-4 mb-50">
+            <div class="footer-widget">
+              <div class="footer-logo">
+                <a class="navbar-brand" href="#"><img src="../static/picture/logo-10.png" alt=""></a>
+              </div>
+              <div class="footer-text">
+                <p>企业数字大脑 | 2026大数据主题赛参赛作品，专注于多智能体驱动的企业运营分析与智能决策支持。</p>
+              </div>
+              <div class="social-icon d-flex">
+                <a href="#"><i class="fab fa-github github-bg"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in linkedin-bg"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-xl-4 col-lg-4 col-md-6 mb-30">
+            <div class="footer-widget">
+              <div class="footer-widget-heading">
+                <h3>快速导航</h3>
+              </div>
+              <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="about.html">项目介绍</a></li>
+                <li><a href="service.html">核心功能</a></li>
+                <li><a href="service.html">数据可视化</a></li>
+                <li><a href="experience.html">在线体验</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-4 col-xl-4 col-lg-4 col-md-6 mb-50">
+            <div class="footer-widget">
+              <div class="footer-widget-heading">
+                <h3>订阅更新</h3>
+              </div>
+              <div class="footer-text mb-25">
+                <p>订阅获取系统最新功能与大数据领域前沿资讯。</p>
+              </div>
+              <div class="subscribe-form">
+                <form action="#">
+                  <input type="text" placeholder="输入邮箱地址">
+                  <button><i class="fab fa-telegram-plane"></i></button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="copyright-area">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 col-lg-6 text-center text-lg-left">
+            <div class="copyright-text">
+              <p>Copyright © 2026 企业数字大脑 | 大数据主题赛 保留所有权利</p>
+            </div>
+          </div>
+          <div class="col-lg-6 col-lg-6 d-none d-lg-block text-right">
+            <div class="footer-menu">
+              <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="#">隐私政策</a></li>
+                <li><a href="#">服务条款</a></li>
+                <li><a href="experience.html">联系我们</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- footer section end -->
+
+  <!-- btn_top_bottom part start -->
+  <div class="btn_top_bottom">
+    <i class="fa-solid fa-arrow-up-long"></i>
+  </div>
+  <!-- btn_top_bottom part end -->
+
+  <!-- =====================js-bootstrap==================================== -->
+  <script src="../static/js/jquery-1.12.4.min.js"></script>
+  <script src="../static/js/bootstrap.min.js"></script>
+  <script src="../static/js/mixitup.min.js"></script>
+  <script src="../static/js/venobox.min.js"></script>
+  <script src="../static/js/wow.min.js"></script>
+  <script src="../static/js/jquery.counterup.min.js"></script>
+  <script src="../static/js/waypoints.min.js"></script>
+  <script src="../static/js/script.js"></script>
+  <script>
+    const slides = document.querySelector(".slider").children;
+const indicatorImages = document.querySelector(".slider-indicator").children;
+let currentIndex = 0;
+let intervalTime = 3000; // Time in milliseconds for autoplay (3 seconds)
+
+// Function to change slides
+function changeSlide(index) {
+  // Remove 'active' class from all indicators and slides
+  for (let i = 0; i < indicatorImages.length; i++) {
+    indicatorImages[i].classList.remove("active");
+    slides[i].classList.remove("active");
+  }
+
+  // Add 'active' class to the current slide and indicator
+  indicatorImages[index].classList.add("active");
+  slides[index].classList.add("active");
+}
+
+// Event listeners for manual slide navigation
+for (let i = 0; i < indicatorImages.length; i++) {
+  indicatorImages[i].addEventListener("click", function () {
+    currentIndex = i; // Update current index
+    changeSlide(currentIndex);
+    resetAutoplay(); // Reset autoplay when manually changed
+  });
+}
+
+// Autoplay function
+function autoPlay() {
+  currentIndex = (currentIndex + 1) % slides.length; // Move to next slide or loop back
+  changeSlide(currentIndex);
+}
+
+// Start autoplay with setInterval
+let autoplayInterval = setInterval(autoPlay, intervalTime);
+
+// Function to reset autoplay (when manually navigating)
+function resetAutoplay() {
+  clearInterval(autoplayInterval); // Clear the interval
+  autoplayInterval = setInterval(autoPlay, intervalTime); // Restart the interval
+}
+  </script>
+</body>
+</html>

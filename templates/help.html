@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>企业数字大脑 - 帮助中心</title>
+
+  <link href="../static/css/css2.css" rel="stylesheet">
+  <link rel="shortcut icon" href="./assets/image/favicon.png" type="image/x-icon">
+  <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/css/all.min.css">
+  <link rel="stylesheet" href="../static/css/animate.min.css">
+  <link rel="stylesheet" href="../static/css/venobox.min.css">
+  <link rel="stylesheet" href="../static/css/style.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+
+  <style>
+    /* 全局赛博朋克风格配色 —— 和核心功能完全一致 */
+    :root {
+      --cyber-purple: #9333EA;
+      --cyber-blue: #3B82F6;
+      --cyber-pink: #EC4899;
+      --dark-bg: #0F0529;
+    }
+    body {
+      background-color: var(--dark-bg) !important;
+      color: #fff !important;
+    }
+    .navbar-nav .nav-link {
+      color: #fff !important;
+    }
+    .navbar-nav .nav-link.active {
+      background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple)) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      font-weight: 600;
+    }
+    .banner-text h1 {
+      background: linear-gradient(90deg, #fff, var(--cyber-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .banner-text a.active {
+      background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* 帮助卡片样式 —— 和核心功能的gallery-img完全一致 */
+    .help-card {
+      border: 2px solid;
+      border-image: linear-gradient(90deg, var(--cyber-blue), var(--cyber-pink)) 1 !important;
+      border-radius: 12px !important;
+      overflow: hidden;
+      padding: 25px;
+      background: rgba(255,255,255,0.05);
+    }
+    .help-card h4 {
+      background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 22px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 导航栏 -->
+  <nav class="navbar navbar-expand-md main-menu">
+    <div class="container">
+      <a class="navbar-brand" href="index.html"><img src="../static/picture/logo-10.png" alt=""></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">项目介绍</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="service.html">核心功能</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="gallery.html">数据可视化</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="experience.html">在线体验</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="help.html">帮助中心</a>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="modal" data-bs-target="#searchModal">
+              <i class="fa fa-search"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 搜索弹窗 -->
+  <div class="modal fade" id="searchModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">搜索</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <input type="text" class="form-control" placeholder="输入搜索内容...">
+            </div>
+            <button type="submit" class="shadow__btn w-100">搜索</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Banner -->
+  <section id="banner" class="cmn-banner" style="background: url(static/image/banner.jpg) no-repeat center/cover;">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="wow animate__animated animate__fadeInLeft banner-text">
+            <h1>帮助中心</h1>
+            <a href="index.html">首页 |</a> <a class="active" href="help.html"> 帮助中心</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 帮助内容区 —— 和核心功能的gallery结构完全一致 -->
+  <section id="gallery">
+    <div class="container">
+      <div class="row">
+        <div class="wow animate__animated animate__fadeInLeft col-md-6">
+          <div class="help-card">
+            <h4>如何上传文件？</h4>
+            <p class="text-white-50 mt-3">进入【在线体验】页面，填写企业名称，上传财务 Excel 文件（.xlsx / .xls），点击开始分析即可。</p>
+          </div>
+        </div>
+        <div class="wow animate__animated animate__fadeInUp col-md-6">
+          <div class="help-card">
+            <h4>支持哪些文件？</h4>
+            <p class="text-white-50 mt-3">系统支持标准财务表格，包含收入、支出、利润、负债、资产等关键字段即可自动解析。</p>
+          </div>
+        </div>
+        <div class="wow animate__animated animate__fadeInLeft col-md-6 mt-4">
+          <div class="help-card">
+            <h4>智能体如何工作？</h4>
+            <p class="text-white-50 mt-3">CEO、CFO、COO、CTO 四大智能体并行分析，分别负责全局决策、财务、运营、技术维度。</p>
+          </div>
+        </div>
+        <div class="wow animate__animated animate__fadeInRight col-md-6 mt-4">
+          <div class="help-card">
+            <h4>如何查看结果？</h4>
+            <p class="text-white-50 mt-3">分析完成后，系统自动跳转到结果页，展示健康评分、风险预警、可视化图表与决策报告。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="footer-section">
+    <div class="container">
+      <div class="wow animate__animated animate__fadeInUp footer-content pt-5 pb-5">
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="footer-widget">
+              <a class="navbar-brand" href="#"><img src="../static/picture/logo-10.png" alt=""></a>
+              <p class="mt-3">企业数字大脑 | 2026大数据主题赛参赛作品，多智能体驱动企业运营分析与决策支持。</p>
+              <div class="social-icon d-flex">
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="footer-widget">
+              <h3>快速导航</h3>
+              <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="about.html">项目介绍</a></li>
+                <li><a href="service.html">核心功能</a></li>
+                <li><a href="gallery.html">数据可视化</a></li>
+                <li><a href="experience.html">在线体验</a></li>
+                <li><a href="help.html">帮助中心</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="footer-widget">
+              <h3>订阅更新</h3>
+              <p>订阅获取系统最新功能与大数据领域前沿资讯。</p>
+              <div class="subscribe-form">
+                <form>
+                  <input type="text" placeholder="输入邮箱地址">
+                  <button><i class="fab fa-telegram-plane"></i></button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="copyright-area">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 text-center text-lg-left">
+            <p>Copyright © 2026 企业数字大脑 | 大数据主题赛 保留所有权利</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../static/js/jquery-1.12.4.min.js"></script>
+  <script src="tatic/js/bootstrap.min.js"></script>
+  <script src="../static/js/wow.min.js"></script>
+  <script src="../static/js/script.js"></script>
+</body>
+</html>
