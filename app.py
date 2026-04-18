@@ -3,9 +3,16 @@ import os
 import pandas as pd
 from werkzeug.utils import secure_filename
 from executive_team import anaylises
+from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Settings, StorageContext
+from llama_index.llms.ollama import Ollama
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
 # 导入智能体核心代码
 from executive_team import ExecutiveTeam, BusinessContext
+
+
+#导入pdf和扫描件代码
+from extract_pdf import load_documents,build_index,load_index,query_documents
 
 # 初始化Flask app
 app = Flask(__name__)
@@ -39,11 +46,12 @@ def render_page(page_name):
 
 # 3. 核心接口：上传Excel + 智能分析
 @app.route('/api/analyze', methods=['POST'])
+
+
+
 def analyze_excel():
 
     jiegou_data=anaylises()
-    
-
 
     # return ('hello world')
     # if 'file' not in request.files:
@@ -90,6 +98,31 @@ def analyze_excel():
     return render_template('gallery.html',
                             chengben_Data=jiegou_data
                             )
+
+
+
+#前端将文件通过POST请求上传，后端接收文件
+@app.route('/api/analyze', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part"}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+
+    try:
+        # 读取Excel文件
+        df = pd.read_excel(file)
+        # 打印Excel内容（或者可以在这里处理数据）
+        print(df.head())  # 显示前几行
+        return jsonify({"message": "File uploaded and read successfully!"}), 200
+    except Exception as e:
+        return jsonify({"error": f"Failed to read the file: {str(e)}"}), 500
+
+#
+
+
 
 # 启动服务
 if __name__ == '__main__':

@@ -3,11 +3,17 @@ import time
 import random
 from datetime import datetime
 from typing import Dict, List, Any
+import pandas as pd
+from sqlalchemy import create_engine
+import sqlite3
 
 # ==================== 智能体导入（确保文件同目录） ====================
 from cfo_agent import CFOAgent
 from coo_agent import COOAgent
 from cto_agent import CTOAgent
+
+#数据库导入
+from db_config import get_engine
 
 # ==================== 企业业务上下文 ====================
 class BusinessContext:
@@ -253,13 +259,6 @@ class ExecutiveTeam:
 
 
 
-
-
-
-
-
-
-
     def _aggregate_risks(self) -> List[str]:
         risks = []
         if self.context.financial_data['profit_margin'] < 10:
@@ -370,11 +369,11 @@ def main_menu():
         else:
             print("❌ 无效选项")
 
-
+#读取excel表格
 # def read_excel(path):
-#     with open(path,'r') as f:
-#         f.readline()
-#     aa=BusinessContext()
+    # with open(path,'r') as f:
+    #     f.readline()
+    # aa=BusinessContext()
     
 
 
