@@ -12,12 +12,14 @@ from cfo_agent import CFOAgent
 from coo_agent import COOAgent
 from cto_agent import CTOAgent
 
-#数据库导入
-from db_config import get_engine
+
+# 数据库导入（暂时注释，后续可根据需要实现）
+# from db_config import get_engine
 
 # ==================== 企业业务上下文 ====================
 class BusinessContext:
     """企业统一数据上下文"""
+
     def __init__(self):
         # 财务
         self.financial_data = {
@@ -72,6 +74,7 @@ class BusinessContext:
         self.technical_data['debt_score'] += random.uniform(-2, 2)
         self.technical_data['avg_response_time'] += random.uniform(-10, 10)
 
+
 # ==================== CEO 智能体 ====================
 class CEOAgent:
     def __init__(self, name: str = "CEO智能体"):
@@ -80,18 +83,18 @@ class CEOAgent:
         self.memory = []
 
     def _synthesize_decision_v2(self, financial_report, operational_report, technical_report):
-        print(f"\n{'='*60}")
-        print(f"🎯 {self.name} 综合决策中...")
-        print(f"{'='*60}")
+        print(f"\n{'=' * 60}")
+        print(f"{self.name} 综合决策中...")
+        print(f"{'=' * 60}")
 
         finance_score = financial_report['财务健康度评分']['综合评分']
         op_score = operational_report['综合运营评分']['综合得分']
         tech_score = technical_report['综合技术评分']['综合得分']
 
-        print(f"\n📊 各部门评分：")
-        print(f"   💰 CFO: {finance_score}分 ({financial_report['财务健康度评分']['健康等级']})")
-        print(f"   ⚙️ COO: {op_score}分 ({operational_report['综合运营评分']['等级']})")
-        print(f"   💻 CTO: {tech_score}分 ({technical_report['综合技术评分']['等级']})")
+        print(f"\n各部门评分：")
+        print(f"   CFO: {finance_score}分 ({financial_report['财务健康度评分']['健康等级']})")
+        print(f"   COO: {op_score}分 ({operational_report['综合运营评分']['等级']})")
+        print(f"   CTO: {tech_score}分 ({technical_report['综合技术评分']['等级']})")
 
         if finance_score < 60:
             strategy = "紧急财务优化，控制成本，提升现金流"
@@ -132,10 +135,10 @@ class CEOAgent:
             "预期效果": "3个月内企业整体运营效率提升15%"
         }
 
-        print(f"\n📋 最终战略决策：")
-        print(f"🎯 核心目标: {strategy}")
-        print(f"📊 优先领域: {priority}")
-        print(f"\n💡 核心建议:")
+        print(f"\n最终战略决策：")
+        print(f"核心目标: {strategy}")
+        print(f"优先领域: {priority}")
+        print(f"\n核心建议:")
         for i, rec in enumerate(key_recommendations[:4], 1):
             print(f"   {i}. {rec}")
         return decision
@@ -148,53 +151,54 @@ class CEOAgent:
         )
 
     def execute(self, decision: Dict):
-        print(f"\n{'='*60}")
-        print(f"⚡ {self.name} 执行决策...")
-        print(f"{'='*60}")
+        print(f"\n{'=' * 60}")
+        print(f"{self.name} 执行决策...")
+        print(f"{'=' * 60}")
         print(f"战略目标：{decision['战略目标']}")
         print("\n执行计划：")
         for step in decision['执行步骤']:
             print(f"   → {step}")
-        print(f"\n✅ 决策执行启动完成！")
-        print(f"📊 目标: {decision['关键KPI']}")
-        print(f"📈 预期: {decision['预期效果']}")
+        print(f"\n决策执行启动完成！")
+        print(f"目标: {decision['关键KPI']}")
+        print(f"预期: {decision['预期效果']}")
+
 
 # ==================== 高管指挥中心 ====================
 class ExecutiveTeam:
     def __init__(self):
-        print("🚀 正在初始化企业数字大脑系统...")
+        print("正在初始化企业数字大脑系统...")
         self.ceo = CEOAgent()
         self.cfo = CFOAgent()
         self.coo = COOAgent()
         self.cto = CTOAgent()
         self.context = BusinessContext()
         self.decision_history = []
-        print("✅ 高管团队智能体初始化完成！")
-        print(f"   👑 CEO: {self.ceo.name}")
-        print(f"   💰 CFO: {self.cfo.name}")
-        print(f"   ⚙️ COO: {self.coo.name}")
-        print(f"   💻 CTO: {self.cto.name}")
-        print("="*60)
+        print("高管团队智能体初始化完成！")
+        print(f"   CEO: {self.ceo.name}")
+        print(f"   CFO: {self.cfo.name}")
+        print(f"   COO: {self.coo.name}")
+        print(f"   CTO: {self.cto.name}")
+        print("=" * 60)
 
     def execute_monthly_review(self):
-        print("\n"+"="*60)
-        print("📅 月度经营分析会启动")
-        print("="*60)
-        print(f"\n👑 {self.ceo.name}：各位，开始月度复盘！")
+        print("\n" + "=" * 60)
+        print("月度经营分析会启动")
+        print("=" * 60)
+        print(f"\n{self.ceo.name}：各位，开始月度复盘！")
 
-        print(f"\n💰 {self.cfo.name}：下面是财务分析...")
+        print(f"\n{self.cfo.name}：下面是财务分析...")
         financial_report = self.cfo.analyze_financial_health(self.context.to_dict())
         time.sleep(1)
 
-        print(f"\n⚙️ {self.coo.name}：运营状况如下...")
+        print(f"\n{self.coo.name}：运营状况如下...")
         operational_report = self.coo.analyze_operations(self.context.to_dict())
         time.sleep(1)
 
-        print(f"\n💻 {self.cto.name}：技术架构评估...")
+        print(f"\n{self.cto.name}：技术架构评估...")
         technical_report = self.cto.analyze_technology(self.context.to_dict())
         time.sleep(1)
 
-        print(f"\n👑 {self.ceo.name}：基于各部门汇报，我做如下决策...")
+        print(f"\n{self.ceo.name}：基于各部门汇报，我做如下决策...")
         decision = self.ceo._synthesize_decision_v2(financial_report, operational_report, technical_report)
         self.ceo.execute(decision)
 
@@ -211,29 +215,29 @@ class ExecutiveTeam:
         }
 
     def crisis_simulation(self, crisis_type: str):
-        print("\n"+"="*60)
-        print(f"🚨 危机模拟启动: {crisis_type}")
-        print("="*60)
+        print("\n" + "=" * 60)
+        print(f"危机模拟启动: {crisis_type}")
+        print("=" * 60)
         if crisis_type == "供应链中断":
             self.context.operational_data['supplier_on_time_rate'] = 45
             self.context.operational_data['order_fulfillment_rate'] = 60
-            print("⚠️ 供应商停工，交付严重影响")
+            print("供应商停工，交付严重影响")
         elif crisis_type == "财务危机":
             self.context.financial_data['cash_flow'] = 50000
             self.context.financial_data['profit_margin'] = 5
-            print("⚠️ 现金流严重不足")
+            print("现金流严重不足")
         elif crisis_type == "技术故障":
             self.context.technical_data['system_uptime'] = 85
             self.context.technical_data['error_rate'] = 8
-            print("⚠️ 核心系统故障")
-        print(f"\n👑 {self.ceo.name}：启动应急预案！")
+            print("核心系统故障")
+        print(f"\n{self.ceo.name}：启动应急预案！")
         decision = self.ceo.make_decision(self.context)
         return decision
 
     def get_dashboard(self) -> Dict[str, Any]:
-        print("\n"+"="*60)
-        print("📊 企业运营仪表盘")
-        print("="*60)
+        print("\n" + "=" * 60)
+        print("企业运营仪表盘")
+        print("=" * 60)
         ctx = self.context.to_dict()
         dashboard = {
             "时间": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -254,10 +258,9 @@ class ExecutiveTeam:
             },
             "风险提示": self._aggregate_risks()
         }
-        print(f"\n📈 财务: {dashboard['财务健康']['状态']} | 运营: {dashboard['运营健康']['状态']} | 技术: {dashboard['技术健康']['状态']}")
+        print(
+            f"\n财务: {dashboard['财务健康']['状态']} | 运营: {dashboard['运营健康']['状态']} | 技术: {dashboard['技术健康']['状态']}")
         return dashboard
-
-
 
     def _aggregate_risks(self) -> List[str]:
         risks = []
@@ -270,9 +273,9 @@ class ExecutiveTeam:
         return risks if risks else ["暂无重大风险"]
 
     def strategic_planning(self, quarters=4):
-        print("\n"+"="*60)
-        print(f"🎯 战略规划（未来{quarters}季度）")
-        print("="*60)
+        print("\n" + "=" * 60)
+        print(f"战略规划（未来{quarters}季度）")
+        print("=" * 60)
         strategy = {
             "Q1": "财务优化 + 成本控制",
             "Q2": "运营流程再造 + 自动化",
@@ -280,7 +283,7 @@ class ExecutiveTeam:
             "Q4": "数字化转型验收"
         }
         for q, v in strategy.items():
-            print(f"📅 {q}: {v}")
+            print(f"{q}: {v}")
         return strategy
 
     def run_analysis(self, context: BusinessContext):
@@ -308,10 +311,10 @@ def anaylises():
     result = team.execute_monthly_review()
     print("#############################################")
     # print(result['财务报告'])
-    caiwu=result['财务报告']
-    chengben=caiwu['成本结构分析']['成本构成']
+    caiwu = result['财务报告']
+    chengben = caiwu['成本结构分析']['成本构成']
     print(caiwu['成本结构分析'])
-    jiegou_fenxi=[]
+    jiegou_fenxi = []
     for key, value in chengben.items():
         jiegou_fenxi.append(value)
     # for key,value in caiwu.items():
@@ -320,25 +323,26 @@ def anaylises():
     #     print(value)
     return jiegou_fenxi
 
+
 # ==================== 主菜单 ====================
 def main_menu():
-    print("="*70)
-    print("🧠 企业数字大脑系统 — 多智能体协作指挥中心")
-    print("="*70)
+    print("=" * 70)
+    print("企业数字大脑系统 - 多智能体协作指挥中心")
+    print("=" * 70)
     team = ExecutiveTeam()
 
     while True:
-        print("\n"+"="*70)
-        print("1. 📅 月度经营分析会")
-        print("2. 🚨 危机模拟处理")
-        print("3. 📊 企业运营仪表盘")
-        print("4. 🎯 战略规划")
-        print("5. 🔄 刷新业务数据")
-        print("6. 💰 CFO独立分析")
-        print("7. ⚙️ COO独立分析")
-        print("8. 💻 CTO独立分析")
-        print("0. ❌ 退出系统")
-        print("="*70)
+        print("\n" + "=" * 70)
+        print("1. 月度经营分析会")
+        print("2. 危机模拟处理")
+        print("3. 企业运营仪表盘")
+        print("4. 战略规划")
+        print("5. 刷新业务数据")
+        print("6. CFO独立分析")
+        print("7. COO独立分析")
+        print("8. CTO独立分析")
+        print("0. 退出系统")
+        print("=" * 70)
         choice = input("请输入选项：").strip()
 
         if choice == "1":
@@ -346,8 +350,8 @@ def main_menu():
         elif choice == "2":
             print("1.供应链中断 2.财务危机 3.技术故障")
             c = input("选择危机：")
-            types = ["","供应链中断","财务危机","技术故障"]
-            if c in ["1","2","3"]:
+            types = ["", "供应链中断", "财务危机", "技术故障"]
+            if c in ["1", "2", "3"]:
                 team.crisis_simulation(types[int(c)])
         elif choice == "3":
             team.get_dashboard()
@@ -355,7 +359,7 @@ def main_menu():
             team.strategic_planning()
         elif choice == "5":
             team.context.update_random()
-            print("✅ 数据已刷新")
+            print("数据已刷新")
             team.get_dashboard()
         elif choice == "6":
             team.cfo.analyze_financial_health(team.context.to_dict())
@@ -364,19 +368,17 @@ def main_menu():
         elif choice == "8":
             team.cto.analyze_technology(team.context.to_dict())
         elif choice == "0":
-            print("\n👋 感谢使用！")
+            print("\n感谢使用！")
             break
         else:
-            print("❌ 无效选项")
+            print("无效选项")
 
-#读取excel表格
+
+# 读取excel表格
 # def read_excel(path):
-    # with open(path,'r') as f:
-    #     f.readline()
-    # aa=BusinessContext()
-    
-
-
+# with open(path,'r') as f:
+#     f.readline()
+# aa=BusinessContext()
 
 
 # ==================== 启动 ====================
