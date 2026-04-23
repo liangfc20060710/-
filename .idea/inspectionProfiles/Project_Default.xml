@@ -1,0 +1,38 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="appdirs" />
+          <option value="atomicwrites" />
+          <option value="crispy-bootstrap5" />
+          <option value="django-crispy-forms" />
+          <option value="fqdn" />
+          <option value="isoduration" />
+          <option value="jsonpointer" />
+          <option value="lxml" />
+          <option value="matplotlib" />
+          <option value="mkl-service" />
+          <option value="opencv-python" />
+          <option value="prettytable" />
+          <option value="pyasn1-modules" />
+          <option value="pyecharts" />
+          <option value="pyls-spyder" />
+          <option value="PyMySQL" />
+          <option value="PyQt5" />
+          <option value="PyQtWebEngine" />
+          <option value="pywin32" />
+          <option value="setuptools" />
+          <option value="simplejson" />
+          <option value="uri-template" />
+          <option value="webcolors" />
+          <option value="wheel" />
+          <option value="requests" />
+          <option value="aiohttp" />
+          <option value="aiobotocore" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
