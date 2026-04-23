@@ -1,502 +1,1116 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>企业数字大脑 | 2026大数据主题赛</title>
+  <title>企业数字大脑 - 数据可视化</title>
 
-  <!-- 修复：所有CSS路径统一改为 /static/ 开头 -->
-  <link href="/static/css/css2.css" rel="stylesheet">
-  <link rel="shortcut icon" href="/static/image/favicon.png" type="image/x-icon">
-  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/static/css/all.min.css">
-  <link rel="stylesheet" href="/static/css/animate.min.css">
-  <link rel="stylesheet" href="/static/css/venobox.min.css">
-  <link rel="stylesheet" href="/static/css/style.css">
-  <link rel="stylesheet" href="/static/css/responsive.css">
+  <link href="../static/css/css2.css" rel="stylesheet">
+  <link rel="shortcut icon" href="./assets/image/favicon.png" type="image/x-icon">
+  <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/css/all.min.css">
+  <link rel="stylesheet" href="../static/css/animate.min.css">
+  <link rel="stylesheet" href="../static/css/venobox.min.css">
+  <link rel="stylesheet" href="../static/css/style.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+
+  <style>
+    /* 全局赛博朋克风格配色 */
+    :root {
+      --cyber-purple: #9333EA;
+      --cyber-blue: #3B82F6;
+      --cyber-pink: #EC4899;
+      --dark-bg: #0F0529;
+      --cyber-green: #10B981;
+      --cyber-yellow: #FBBF24;
+    }
+    body {
+      background-color: var(--dark-bg) !important;
+      color: #fff !important;
+      font-family: 'Arial', sans-serif;
+    }
+    /* 导航栏样式 */
+    .navbar-nav .nav-link {
+      color: #fff !important;
+      transition: all 0.3s ease;
+    }
+    .navbar-nav .nav-link:hover {
+      background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple)) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+    }
+    .navbar-nav .nav-link.active {
+      background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple)) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      font-weight: 600;
+    }
+    /* Banner 标题渐变 */
+    .banner-text h1 {
+      background: linear-gradient(90deg, #fff, var(--cyber-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 3.5rem;
+      font-weight: 800;
+      text-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+    }
+    .banner-text a.active {
+      background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    /* 卡片样式 */
+    .gallery-card {
+      border: 2px solid;
+      border-image: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple)) 1 !important;
+      border-radius: 16px !important;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 15px 35px rgba(147, 51, 234, 0.25);
+      transition: all 0.3s ease;
+    }
+    .gallery-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(147, 51, 234, 0.35);
+    }
+    /* 图表容器 */
+    .chart-container {
+      position: relative;
+      height: 300px;
+      width: 100%;
+      margin-top: 20px;
+    }
+    /* 图表标题 */
+    .chart-title {
+      background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    /* 图表描述 */
+    .chart-description {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    /* 智能分析助手卡片 */
+    .chat-card {
+      border: 2px solid;
+      border-image: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple)) 1;
+      border-radius: 20px;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 15px 35px rgba(147, 51, 234, 0.25);
+    }
+    /* 聊天区域 */
+    #chatArea {
+      height: 350px;
+      overflow-y: auto;
+      margin-bottom: 25px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    /* 聊天消息 */
+    .chat-message {
+      margin-bottom: 15px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      max-width: 80%;
+      animation: messageFadeIn 0.5s ease;
+    }
+    .user-message {
+      margin-left: auto;
+      background: rgba(147, 51, 234, 0.2);
+      text-align: right;
+      border: 1px solid rgba(147, 51, 234, 0.4);
+    }
+    .system-message {
+      margin-right: auto;
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+    }
+    /* 消息动画 */
+    @keyframes messageFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    /* 输入区域 */
+    .input-group {
+      gap: 12px;
+    }
+    .form-control {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--cyber-blue);
+      color: #fff;
+      padding: 14px 15px;
+      border-radius: 8px;
+    }
+    .form-control:focus {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--cyber-purple);
+      box-shadow: 0 0 0 0.2rem rgba(147, 51, 234, 0.25);
+    }
+    /* 按钮样式 */
+    .shadow__btn {
+      background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple));
+      border: none;
+      color: #fff;
+      padding: 12px 28px;
+      font-weight: 600;
+      font-size: 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .shadow__btn:hover {
+      background: linear-gradient(90deg, var(--cyber-purple), var(--cyber-pink));
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(147, 51, 234, 0.4);
+    }
+    /* 快捷问题按钮 */
+    .quick-question-btn {
+      border-color: var(--cyber-blue);
+      color: var(--cyber-blue);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+    .quick-question-btn:hover {
+      background: var(--cyber-blue);
+      color: #fff;
+    }
+    /* 页脚 */
+    .footer-section {
+      background: rgba(0, 0, 0, 0.3);
+      margin-top: 100px;
+    }
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+      .banner-text h1 {
+        font-size: 2.5rem;
+      }
+      .chart-container {
+        height: 250px;
+      }
+      #chatArea {
+        height: 300px;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- ================ start nav bar=========== -->
-<nav class="navbar navbar-expand-md main-menu">
-<div class="container">
-<a class="navbar-brand" href="index.html"><img src="/static/picture/logo-10.png" alt=""></a>
-<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-<i class="fas fa-bars"></i>
-</button>
-<div class="collapse navbar-collapse" id="navbarSupportedContent">
-<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-<li class="nav-item">
-<a class="nav-link active" aria-current="page" href="index.html">首页</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="about.html">项目介绍</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="service.html">核心功能</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="gallery.html">数据可视化</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="experience.html">在线体验</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="help.html">帮助中心</a>
-</li>
-<li class="nav-item">
-<button class="nav-link" data-bs-toggle="modal" data-bs-target="#searchModal">
-<i class="fa fa-search" aria-hidden="true"></i>
-</button>
-</li>
-</ul>
-</div>
-</div>
-</nav>
+  <!-- 导航栏 -->
+  <nav class="navbar navbar-expand-md main-menu">
+    <div class="container">
+      <a class="navbar-brand" href="index.html"><img src="../static/picture/logo-10.png" alt=""></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">项目介绍</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="service.html">核心功能</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="gallery.html">数据可视化</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="experience.html">在线体验</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="help.html">帮助中心</a>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="modal" data-bs-target="#searchModal">
+              <i class="fa fa-search"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-<!-- Search Modal -->
-<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered">
-<div class="modal-content">
-<div class="modal-header">
-<h5 class="modal-title" id="searchModalLabel">搜索</h5>
-<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-<div class="modal-body">
-<form action="#" method="GET">
-<div class="mb-3">
-<input type="text" class="form-control" name="query" placeholder="输入搜索内容...">
-</div>
-<button type="submit" class="shadow__btn w-100 mt-3 mb-2">搜索</button>
-</form>
-</div>
-</div>
-</div>
-</div>
-<!-- ================end nav bar=========== -->
+  <!-- 搜索弹窗 -->
+  <div class="modal fade" id="searchModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">搜索</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <input type="text" class="form-control" placeholder="输入搜索内容...">
+            </div>
+            <button type="submit" class="shadow__btn w-100">搜索</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<!-- start banner-section -->
-<!-- 修复：背景图路径改为 /static/ 开头 -->
-<section id="banner" style="background: url(../static/image/banner.jpg) no-repeat center/cover;">
-<div class="container">
-<div class="row">
-<div class="col-md-12">
-<div class="wow animate__animated animate__fadeInLeft banner-text">
-<h1>企业数字大脑</h1>
-<h4>多智能体赋能企业运营分析与决策支持</h4>
-<p>基于多智能体协同的企业运营分析系统，自动解析Excel财务数据，实现智能评分、风险预警、决策建议，为企业打造一站式数字决策中枢。</p>
-<div class="main-btn">
-<a class="shadow__btn" href="experience.html">上传Excel开始分析</a>
-</div>
-</div>
-</div>
-<div class="col-md-6"></div>
-</div>
-</div>
-</section>
-<!-- end banner-section -->
+  <!-- Banner -->
+  <section id="banner" class="cmn-banner" style="background: url(static/image/banner.jpg) no-repeat center/cover;">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="wow animate__animated animate__fadeInLeft banner-text">
+            <h1>数据可视化</h1>
+            <a href="index.html">首页 |</a> <a class="active" href="gallery.html"> 数据可视化</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- ==========start gallary section ===========================================-->
-<section id="gallery">
-<div class="container">
-<div class="row ">
-<div class="wow animate__animated animate__fadeInLeft col-md-4">
-<div class="gallery-img">
-<img src="/static/picture/banner-2.jpg" class="w-100" alt="">
-</div>
-<div class="gallery-text text-center mt-3">
-<h4>CEO 智能体</h4>
-<p>统筹决策 | 全局分析</p>
-</div>
-</div>
-<div class="wow animate__animated animate__fadeInUp col-md-4">
-<div class="gallery-img">
-<img src="/static/picture/banner-1.jpg" class="w-100" alt="">
-</div>
-<div class="gallery-text text-center mt-3">
-<h4>CFO 智能体</h4>
-<p>财务分析 | 风险评分</p>
-</div>
-</div>
-<div class="wow animate__animated animate__fadeInRight col-md-4">
-<div class="gallery-img">
-<img src="/static/picture/banner-3.jpg" class="w-100" alt="">
-</div>
-<div class="gallery-text text-center mt-3">
-<h4>COO & CTO 智能体</h4>
-<p>运营优化 | 技术保障</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- ==========end gallary section ===========================================-->
+  <!-- 可视化内容区 -->
+  <section id="gallery" style="padding: 80px 0; background: linear-gradient(135deg, rgba(15, 5, 41, 0.9), rgba(15, 5, 41, 0.95));">
+    <div class="container">
+      <div class="row mb-10">
+        <div class="col-md-12 text-center">
+          <h2 style="background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));-webkit-background-clip: text;-webkit-text-fill-color: transparent; margin-bottom: 20px; font-size: 3rem; font-weight: 700;">
+            数据可视化分析中心
+          </h2>
+          <p class="text-white-50 mb-6" style="font-size: 1.2rem; max-width: 800px; margin: 0 auto;">通过直观的图表展示企业财务数据，支持智能对话分析</p>
+        </div>
+      </div>
 
-<section id="banner-2">
-<div class="container ">
-<div class="row">
-<div class="col-md-6">
-<div class="row mt-5">
-<div class="wow animate__animated animate__fadeInUp col-md-6 col-sm-6">
-<div class="explore-content d-flex">
-<img src="/static/picture/banner-1.jpg" class="img-fluid w-100" alt="">
-</div>
-</div>
-<div class="wow animate__animated animate__fadeInUp col-md-6 col-sm-6">
-<div class="explore-content d-flex">
-<img src="/static/picture/banner-2.jpg" class="img-fluid w-100" alt="">
-</div>
-</div>
-</div>
-<div class="row">
-<div class="col-md-12">
-<div class="row mt-5">
-<div class="col-sm-4 col-md-3 m-auto ">
-<div class="wow animate__animated animate__fadeInUp counter_inner">
-<h4 class="counterr">98</h4>
-<span>%</span>
-<p>分析准确率</p>
-</div>
-</div>
-<div class="col-sm-4 col-md-3 m-auto">
-<div class="wow animate__animated animate__fadeInUp counter_inner">
-<h4 class="counterr">10</h4>
-<span>M+</span>
-<p>企业数据量</p>
-</div>
-</div>
-<div class="col-sm-4 col-md-3 m-auto">
-<div class="wow animate__animated animate__fadeInUp counter_inner">
-<h4 class="counterr">4</h4>
-<span>+</span>
-<p>智能体协同</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="col-md-6">
-<div class="wow animate__animated animate__fadeInUp explore-right">
-<h2><span>数据驱动决策 · 智能赋能运营</span></h2>
-<p>企业数字大脑是面向2026大数据主题赛打造的国奖级项目，通过多智能体协同架构，实现Excel自动解析、财务指标计算、企业健康评分、AI报告生成一体化服务，帮助企业快速洞察风险、提升效率、科学决策。</p>
-<div class="main-btn">
-<a class="shadow__btn" href="about.html">了解项目详情</a>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
+      <!-- 主内容区 -->
+      <div class="row gap-8">
+        <!-- 对话界面 -->
+        <div class="col-lg-4 order-lg-1 order-2">
+          <div class="chat-card">
+            <h3 style="background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));-webkit-background-clip: text;-webkit-text-fill-color: transparent; margin-bottom: 25px; font-size: 1.5rem; font-weight: 600;">
+              智能分析助手
+            </h3>
 
-<!--===================== banner-3 ==================-->
-<section id="banner-3">
-<div class="container ">
-<div class="row">
-<div class="col-md-6 text-light order-2 order-md-1 order-lg-1">
-<div class="wow animate__animated animate__fadeInLeft section-left">
-<h2><span>核心能力</span></h2>
-<p class="pera-1">
-✅ 自动读取Excel财务数据，自动清洗与结构化<br>
-✅ 多智能体并行分析，覆盖财务、运营、风控全维度<br>
-✅ 实时生成企业健康评分与风险预警<br>
-✅ AI自动输出专业决策报告与可视化图表
-<span>系统基于Python + FastAPI开发，稳定高效、易于扩展，是企业数字化转型的最佳智能助手。</span>
-</p>
-<div class="main-btn">
-<a class="shadow__btn" href="service.html">查看全部功能</a>
-</div>
-</div>
-</div>
-<div class="col-md-5 m-auto order-1 order-md-2 order-lg-2">
-<div class="wow animate__animated animate__fadeInRight section-right">
-<img src="/static/picture/about.jpg" class="w-100" alt="">
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- banner-3 end -->
+            <!-- 对话消息展示区 -->
+            <div id="chatArea">
+              <!-- 系统欢迎消息 -->
+            </div>
 
-<!-- gallery start -->
-<section id="portfolio">
-<div class="container px-lg-0">
-<div class="row">
-<div class="col-lg-7 m-auto">
-<div class="wow animate__animated animate__fadeInUp common_head text-center">
-<h4>数据可视化展示</h4>
-<p>直观呈现企业财务趋势、风险分布、健康评分，让数据一目了然。</p>
-</div>
-</div>
-</div>
-<div class="portfolio_main">
-<div class="row">
-<div class="col-lg-12">
-<div class="filter_menu">
-<ul class="wow animate__animated animate__fadeInUp d-flex flex-wrap" data-wow-delay=".3s">
-<li class="mixitup-control-active" data-filter="all">全部</li>
-<li data-filter=".finance">财务分析</li>
-<li data-filter=".operation">运营分析</li>
-<li data-filter=".risk">风险评估</li>
-</ul>
-</div>
-<div class="wow animate__animated animate__fadeInUp filter_img">
-<div class="img mix finance">
-<img src="/static/picture/banner-1.jpg" alt="财务指标">
-<div class="overly">
-<a class="venobox" data-gall="gallery01" href="/static/picture/banner-1.jpg">
-<i class="fa-solid fa-plus"></i></a>
-</div>
-</div>
-<div class="img mix operation">
-<img src="/static/picture/banner-3.jpg" alt="运营效率">
-<div class="overly">
-<a class="venobox" data-gall="gallery01" href="/static/picture/banner-3.jpg"><i class="fa-solid fa-plus"></i></a>
-</div>
-</div>
-<div class="img mix risk">
-<img src="/static/picture/gallery_img3.jpg" alt="风险预警">
-<div class="overly">
-<a class="venobox" data-gall="gallery01" href="/static/picture/gallery_img3.jpg"><i class="fa-solid fa-plus"></i></a>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- gallery end -->
+            <!-- 文件上传区域 -->
+            <div class="mb-5">
+              <label class="form-label" style="color: #fff; font-weight: 500; font-size: 1rem;">上传文件</label>
+              <input type="file" class="form-control" id="fileUpload" name="file">
+              <div class="form-text" style="color: rgba(255,255,255,0.6); margin-top: 8px;">支持各种格式的文件，系统会自动分析文件内容</div>
+            </div>
 
-<!-- pricing start -->
-<section id="pricing">
-<div class="container">
-<div class="row">
-<div class="col-md-7 m-auto">
-<div class="wow animate__animated animate__fadeInUp common_head mb-5">
-<h4 class="text-center text-light">功能套餐</h4>
-<p class="text-center text-light">为不同企业场景提供轻量化、专业化、一体化的智能决策服务。</p>
-</div>
-</div>
-</div>
-<div class="row">
-<div class="col-lg-12">
-<div class="pricing-table">
-<div class="row">
-<div class="col-sm-4">
-<div class="wow animate__animated animate__fadeInLeft card text-center">
-<div class="title">
-<i class="fa fa-chart-line" aria-hidden="true"></i>
-<h2>基础版</h2>
-</div>
-<div class="price">
-<h4><sup>¥</sup>0</h4>
-</div>
-<div class="option">
-<ul>
-<li><i class="fa fa-check" aria-hidden="true"></i> Excel数据解析</li>
-<li><i class="fa fa-check" aria-hidden="true"></i> 基础财务计算</li>
-<li><i class="fa fa-check" aria-hidden="true"></i> 简单数据展示</li>
-</ul>
-</div>
-<a href="experience.html">立即使用</a>
-</div>
-</div>
-<div class="col-sm-4">
-<div class="wow animate__animated animate__fadeInUp card text-center">
-<div class="title">
-<i class="fa fa-brain" aria-hidden="true"></i>
-<h2>专业版</h2>
-</div>
-<div class="price">
-<h4>智能体</h4>
-</div>
-<div class="option">
-<ul>
-<li><i class="fa fa-check" aria-hidden="true"></i> 多智能体协同分析</li>
-<li><i class="fa fa-check" aria-hidden="true"></i> 企业健康评分</li>
-<li><i class="fa fa-check" aria-hidden="true"></i> AI决策报告</li>
-</ul>
-</div>
-<a href="experience.html">立即体验</a>
-</div>
-</div>
-<div class="col-sm-4">
-<div class="wow animate__animated animate__fadeInRight card text-center">
-<div class="title">
-<i class="fa fa-rocket" aria-hidden="true"></i>
-<h2>企业版</h2>
-</div>
-<div class="price">
-<h4>完整系统</h4>
-</div>
-<div class="option">
-<ul>
-<li><i class="fa fa-check" aria-hidden="true"></i> 私有化部署</li>
-<li><i class="fa fa-check" aria-hidden="true"></i> 自定义智能体扩展</li>
-<li><i class="fa fa-check" aria-hidden="true"></i> 全功能API服务</li>
-</ul>
-</div>
-<a href="experience.html">联系我们</a>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- pricing end -->
+            <!-- 用户输入区域 -->
+            <div class="input-group">
+              <input type="text" class="form-control" id="userInput" placeholder="输入您的问题...例如：分析成本结构">
+              <button class="shadow__btn" id="sendBtn">发送</button>
+            </div>
 
-<!-- testimonial start -->
-<section id="testimonials" class="testimonials">
-<div class="container">
-<div class="row">
-<div class="col-md-5">
-<div class="wow animate__animated animate__fadeInLeft common-heading mb-5">
-<h4 class="pre-title">评委与用户 <span>评价</span></h4>
-<p>来自大数据竞赛评委、企业用户与指导老师的真实反馈。</p>
-</div>
-</div>
-<div class="wow animate__animated animate__fadeInRight col-md-7">
-<div class="slider-indicator" data-wow-delay=".2s">
-<img src="/static/picture/testimonial-01.png" class="active" alt="img" data-id="0">
-<img src="/static/picture/testimonial-03.png" alt="img" data-id="1">
-<img src="/static/picture/testimonial-02.png" alt="img" data-id="2">
-</div>
-<div class="slider">
-<div class="slide active">
-<p>多智能体架构设计新颖，功能完整，非常符合大数据竞赛主题，具备国奖潜力。</p>
-<div class="client-info">
-<h3>大赛评委</h3>
-<span>大数据领域专家</span>
-</div>
-</div>
-<div class="slide">
-<p>操作简单，分析精准，帮助我们快速识别财务风险，是非常实用的企业工具。</p>
-<div class="client-info">
-<h3>企业管理者</h3>
-<span>测试用户</span>
-</div>
-</div>
-<div class="slide">
-<p>项目逻辑清晰、前后端完整，智能体协同创新突出，展示效果极佳。</p>
-<div class="client-info">
-<h3>指导老师</h3>
-<span>项目顾问</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- testimonial end -->
+            <!-- 快捷问题 -->
+            <div class="mt-5">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <p class="text-white-50 mb-0" style="font-weight: 500; font-size: 1rem;">快捷问题：</p>
+                <button class="btn btn-sm btn-outline-danger" onclick="clearChat()" style="border-color: #EF4444; color: #EF4444; padding: 6px 12px; font-size: 0.85rem;">清空聊天</button>
+              </div>
+              <div class="d-flex flex-wrap gap-2">
+                <button class="btn btn-sm quick-question-btn" onclick="sendQuickQuestion('分析成本结构')">分析成本结构</button>
+                <button class="btn btn-sm quick-question-btn" onclick="sendQuickQuestion('资产结构分析')">资产结构分析</button>
+                <button class="btn btn-sm quick-question-btn" onclick="sendQuickQuestion('财务趋势分析')">财务趋势分析</button>
+                <button class="btn btn-sm quick-question-btn" onclick="sendQuickQuestion('企业健康评估')">企业健康评估</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-<!-- footer start -->
-<footer class="footer-section">
-<div class="container">
-<div class="wow animate__animated animate__fadeInUp footer-content pt-5 pb-5" data-wow-delay=".2s">
-<div class="row">
-<div class="col-lg-4 col-xl-4 mb-50">
-<div class="footer-widget">
-<div class="footer-logo">
-<a class="navbar-brand" href="#"><img src="/static/picture/logo-10.png" alt="企业数字大脑"></a>
-</div>
-<div class="footer-text">
-<p>企业数字大脑 | 2026大数据主题赛参赛作品，多智能体驱动企业运营分析与决策支持。</p>
-</div>
-<div class="social-icon d-flex">
-<a href="#"><i class="fab fa-github github-bg"></i></a>
-<a href="#"><i class="fab fa-linkedin-in linkedin-bg"></i></a>
-</div>
-</div>
-</div>
-<div class="col-lg-4 col-xl-4 col-md-6 mb-30">
-<div class="footer-widget">
-<div class="footer-widget-heading">
-<h3>快速链接</h3>
-</div>
-<ul>
-<li><a href="index.html">首页</a></li>
-<li><a href="about.html">项目介绍</a></li>
-<li><a href="service.html">核心功能</a></li>
-<li><a href="gallery.html">数据可视化</a></li>
-<li><a href="experience.html">在线体验</a></li>
-</ul>
-</div>
-</div>
-<div class="col-lg-4 col-xl-4 col-md-6 mb-50">
-<div class="footer-widget">
-<div class="footer-widget-heading">
-<h3>订阅更新</h3>
-</div>
-<div class="footer-text mb-25">
-<p>订阅获取系统最新功能与大数据领域资讯。</p>
-</div>
-<div class="subscribe-form">
-<form action="#">
-<input type="text" placeholder="邮箱地址">
-<button><i class="fab fa-telegram-plane"></i></button>
-</form>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="copyright-area">
-<div class="container">
-<div class="row">
-<div class="col-lg-6 text-center text-lg-left">
-<div class="copyright-text">
-<p>Copyright © 2026 企业数字大脑 | 大数据主题赛 保留所有权利</p>
-</div>
-</div>
-<div class="col-lg-6 d-none d-lg-block text-right">
-<div class="footer-menu">
-<ul>
-<li><a href="index.html">首页</a></li>
-<li><a href="#">隐私政策</a></li>
-<li><a href="#">服务条款</a></li>
-<li><a href="experience.html">联系我们</a></li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div>
-</footer>
-<!-- footer section end -->
+        <!-- 图表区域 -->
+        <div class="col-lg-8 order-lg-2 order-1">
+          <div class="row gap-6">
+            <!-- 财务指标柱状图 -->
+            <div class="col-md-6">
+              <div class="gallery-card p-4">
+                <h4 class="chart-title">财务指标柱状图</h4>
+                <p class="chart-description">收入、支出、利润趋势可视化</p>
+                <div id="chengben" class="chart-container"></div>
+              </div>
+            </div>
 
-<!-- btn_top_bottom part start -->
-<div class="btn_top_bottom">
-<i class="fa-solid fa-arrow-up-long"> </i>
-</div>
-<!-- btn_top_bottom part end -->
+            <!-- 资产负债饼图 -->
+            <div class="col-md-6">
+              <div class="gallery-card p-4">
+                <h4 class="chart-title">资产负债饼图</h4>
+                <p class="chart-description">资产结构、负债占比直观展示</p>
+                <div id="bingtu" class="chart-container"></div>
+              </div>
+            </div>
 
-<!-- 修复：全部替换为官方CDN，彻底解决本地JS 404问题 -->
-<script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://cdn.bootcdn.net/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
-<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.min.js"></script>
-<script src="https://cdn.bootcdn.net/ajax/libs/mixitup/3.3.1/mixitup.min.js"></script>
-<script src="https://cdn.bootcdn.net/ajax/libs/venobox/2.0.4/venobox.min.js"></script>
-<script src="https://cdn.bootcdn.net/ajax/libs/wow/1.1.2/wow.min.js"></script>
-<script src="https://cdn.bootcdn.net/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
-<script src="https://cdn.bootcdn.net/ajax/libs/Counter-Up/1.0.0/jquery.counterup.min.js"></script>
-<!-- 保留你自己的script.js（如果有） -->
-<script src="/static/js/script.js"></script>
+            <!-- 财务趋势折线图 -->
+            <div class="col-md-6">
+              <div class="gallery-card p-4">
+                <h4 class="chart-title">财务趋势折线图</h4>
+                <p class="chart-description">月度/季度财务数据趋势分析</p>
+                <div id="trendChart" class="chart-container"></div>
+              </div>
+            </div>
 
-<script>
-var containerEl = document.querySelector('.filter_img');
-var mixer = mixitup(containerEl);
-$('.venobox').venobox({
-spinner: 'wave',
-spinColor: '#165DFF',
-arrowsColor: '#165DFF',
-closeColor: '#165DFF',
-});
-// 初始化wow动画
-new WOW().init();
-</script>
+            <!-- 企业健康雷达图 -->
+            <div class="col-md-6">
+              <div class="gallery-card p-4">
+                <h4 class="chart-title">企业健康雷达图</h4>
+                <p class="chart-description">多维度企业健康状况评估</p>
+                <div id="radarChart" class="chart-container"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="footer-section">
+    <div class="container">
+      <div class="wow animate__animated animate__fadeInUp footer-content pt-5 pb-5">
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="footer-widget">
+              <a class="navbar-brand" href="#"><img src="../static/picture/logo-10.png" alt=""></a>
+              <p class="mt-3">企业数字大脑 | 2026大数据主题赛参赛作品，多智能体驱动企业运营分析与决策支持。</p>
+              <div class="social-icon d-flex">
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="footer-widget">
+              <h3>快速导航</h3>
+              <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="about.html">项目介绍</a></li>
+                <li><a href="service.html">核心功能</a></li>
+                <li><a href="gallery.html">数据可视化</a></li>
+                <li><a href="experience.html">在线体验</a></li>
+                <li><a href="help.html">帮助中心</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="footer-widget">
+              <h3>订阅更新</h3>
+              <p>订阅获取系统最新功能与大数据领域前沿资讯。</p>
+              <div class="subscribe-form">
+                <form>
+                  <input type="text" placeholder="输入邮箱地址">
+                  <button><i class="fab fa-telegram-plane"></i></button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="copyright-area">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 text-center text-lg-left">
+            <p>Copyright © 2026 企业数字大脑 | 大数据主题赛 保留所有权利</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../static/js/jquery-1.12.4.min.js"></script>
+  <script src="../static/js/bootstrap.min.js"></script>
+  <script src="../static/js/wow.min.js"></script>
+  <script src="../static/js/script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <script>
+    // 确保DOM加载完成后初始化图表
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM加载完成，开始初始化图表');
+
+        // 生成随机数据的函数
+        function generateRandomData(min, max, count) {
+          const data = [];
+          for (let i = 0; i < count; i++) {
+            data.push(Math.floor(Math.random() * (max - min + 1)) + min);
+          }
+          return data;
+        }
+
+        // 初始化财务指标柱状图
+        setTimeout(function() {
+          var chartDom = document.getElementById('chengben');
+          if (chartDom) {
+            console.log('初始化财务指标柱状图');
+            var myChart = echarts.init(chartDom);
+            // 生成随机成本数据
+            var chengbenData = generateRandomData(200000, 1500000, 5);
+            var option = {
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'shadow'
+                },
+                formatter: function(params) {
+                  return params[0].name + ': ' + params[0].value.toLocaleString() + ' 元';
+                }
+              },
+              xAxis: {
+                type: 'category',
+                data: ['原材料', '人工', '制造', '管理', '销售'],
+                axisLabel: {
+                  color: '#fff'
+                },
+                axisLine: {
+                  lineStyle: {
+                    color: 'rgba(255, 255, 255, 0.3)'
+                  }
+                }
+              },
+              yAxis: {
+                type: 'value',
+                axisLabel: {
+                  color: '#fff',
+                  formatter: function(value) {
+                    return (value / 10000).toFixed(0) + '万';
+                  }
+                },
+                axisLine: {
+                  lineStyle: {
+                    color: 'rgba(255, 255, 255, 0.3)'
+                  }
+                },
+                splitLine: {
+                  lineStyle: {
+                    color: 'rgba(255, 255, 255, 0.1)'
+                  }
+                }
+              },
+              series: [
+                {
+                  data: chengbenData,
+                  type: 'bar',
+                  itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                      { offset: 0, color: '#3B82F6' },
+                      { offset: 1, color: '#9333EA' }
+                    ])
+                  },
+                  emphasis: {
+                    itemStyle: {
+                      color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#9333EA' },
+                        { offset: 1, color: '#EC4899' }
+                      ])
+                    }
+                  },
+                  barWidth: '60%'
+                }
+              ]
+            };
+            option && myChart.setOption(option);
+            // 窗口大小改变时重绘图表
+            window.addEventListener('resize', function() {
+              myChart.resize();
+            });
+          } else {
+            console.error('chengben元素不存在');
+          }
+        }, 100);
+
+        // 初始化资产负债饼图
+        setTimeout(function() {
+          var chartDom = document.getElementById('bingtu');
+          if (chartDom) {
+            console.log('初始化资产负债饼图');
+            var myChart = echarts.init(chartDom);
+            // 生成随机资产数据
+            var assetData = [
+              { value: Math.floor(Math.random() * 3000000) + 3000000, name: '流动资产', itemStyle: { color: '#3B82F6' } },
+              { value: Math.floor(Math.random() * 2000000) + 1500000, name: '固定资产', itemStyle: { color: '#9333EA' } },
+              { value: Math.floor(Math.random() * 1500000) + 1000000, name: '无形资产', itemStyle: { color: '#EC4899' } },
+              { value: Math.floor(Math.random() * 1000000) + 500000, name: '其他资产', itemStyle: { color: '#10B981' } }
+            ];
+            var option = {
+              tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                  return params.name + ': ' + params.value.toLocaleString() + ' 元 (' + params.percent + '%)';
+                }
+              },
+              legend: {
+                top: 'bottom',
+                left: 'center',
+                textStyle: {
+                  color: '#fff',
+                  fontSize: 12
+                },
+                itemGap: 15
+              },
+              series: [
+                {
+                  name: '资产结构',
+                  type: 'pie',
+                  radius: ['40%', '70%'],
+                  center: ['50%', '40%'],
+                  avoidLabelOverlap: false,
+                  itemStyle: {
+                    borderRadius: 12,
+                    borderColor: '#0F0529',
+                    borderWidth: 3
+                  },
+                  label: {
+                    show: false
+                  },
+                  emphasis: {
+                    label: {
+                      show: true,
+                      fontSize: 16,
+                      fontWeight: 'bold',
+                      color: '#fff'
+                    },
+                    itemStyle: {
+                      shadowBlur: 10,
+                      shadowOffsetX: 0,
+                      shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                  },
+                  labelLine: {
+                    show: false
+                  },
+                  data: assetData
+                }
+              ]
+            };
+            option && myChart.setOption(option);
+            // 窗口大小改变时重绘图表
+            window.addEventListener('resize', function() {
+              myChart.resize();
+            });
+          } else {
+            console.error('bingtu元素不存在');
+          }
+        }, 200);
+
+        // 初始化财务趋势折线图
+        setTimeout(function() {
+          var chartDom = document.getElementById('trendChart');
+          if (chartDom) {
+            console.log('初始化财务趋势折线图');
+            var myChart = echarts.init(chartDom);
+
+            // 生成随机财务趋势数据
+            function generateTrendData() {
+              const revenue = [];
+              const profit = [];
+              let baseRevenue = 1000000;
+              let baseProfit = 250000;
+
+              for (let i = 0; i < 6; i++) {
+                // 收入随机增长
+                const revenueGrowth = Math.random() * 500000 + 100000;
+                baseRevenue += revenueGrowth;
+                revenue.push(Math.floor(baseRevenue));
+
+                // 利润为收入的20-30%
+                const profitRatio = Math.random() * 0.1 + 0.2;
+                const currentProfit = Math.floor(baseRevenue * profitRatio);
+                profit.push(currentProfit);
+              }
+
+              return { revenue, profit };
+            }
+
+            const trendData = generateTrendData();
+
+            var option = {
+              tooltip: {
+                trigger: 'axis',
+                formatter: function(params) {
+                  let result = params[0].name + '<br/>';
+                  params.forEach(function(item) {
+                    result += item.marker + item.seriesName + ': ' + item.value.toLocaleString() + ' 元<br/>';
+                  });
+                  return result;
+                }
+              },
+              legend: {
+                data: ['收入', '利润'],
+                textStyle: {
+                  color: '#fff',
+                  fontSize: 12
+                },
+                top: 'top',
+                left: 'center',
+                itemGap: 15
+              },
+              grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+              },
+              xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                axisLabel: {
+                  color: '#fff'
+                },
+                axisLine: {
+                  lineStyle: {
+                    color: 'rgba(255, 255, 255, 0.3)'
+                  }
+                }
+              },
+              yAxis: {
+                type: 'value',
+                axisLabel: {
+                  color: '#fff',
+                  formatter: function(value) {
+                    return (value / 10000).toFixed(0) + '万';
+                  }
+                },
+                axisLine: {
+                  lineStyle: {
+                    color: 'rgba(255, 255, 255, 0.3)'
+                  }
+                },
+                splitLine: {
+                  lineStyle: {
+                    color: 'rgba(255, 255, 255, 0.1)'
+                  }
+                }
+              },
+              series: [
+                {
+                  name: '收入',
+                  type: 'line',
+                  stack: 'Total',
+                  data: trendData.revenue,
+                  itemStyle: {
+                    color: '#3B82F6'
+                  },
+                  lineStyle: {
+                    width: 3
+                  },
+                  symbol: 'circle',
+                  symbolSize: 8
+                },
+                {
+                  name: '利润',
+                  type: 'line',
+                  stack: 'Total',
+                  data: trendData.profit,
+                  itemStyle: {
+                    color: '#9333EA'
+                  },
+                  lineStyle: {
+                    width: 3
+                  },
+                  symbol: 'circle',
+                  symbolSize: 8
+                }
+              ]
+            };
+            option && myChart.setOption(option);
+            // 窗口大小改变时重绘图表
+            window.addEventListener('resize', function() {
+              myChart.resize();
+            });
+          } else {
+            console.error('trendChart元素不存在');
+          }
+        }, 300);
+
+        // 初始化企业健康雷达图
+        setTimeout(function() {
+          var chartDom = document.getElementById('radarChart');
+          if (chartDom) {
+            console.log('初始化企业健康雷达图');
+            var myChart = echarts.init(chartDom);
+
+            // 生成随机企业健康数据
+            function generateHealthData() {
+              return [
+                Math.floor(Math.random() * 20) + 70, // 盈利能力 70-90
+                Math.floor(Math.random() * 20) + 65, // 偿债能力 65-85
+                Math.floor(Math.random() * 20) + 75, // 运营能力 75-95
+                Math.floor(Math.random() * 20) + 60, // 成长能力 60-80
+                Math.floor(Math.random() * 20) + 65  // 现金流 65-85
+              ];
+            }
+
+            const healthData = generateHealthData();
+
+            var option = {
+              tooltip: {
+                trigger: 'item'
+              },
+              legend: {
+                data: ['企业健康指数'],
+                textStyle: {
+                  color: '#fff',
+                  fontSize: 12
+                },
+                top: 'top',
+                left: 'center',
+                itemGap: 15
+              },
+              radar: {
+                indicator: [
+                  { name: '盈利能力', max: 100 },
+                  { name: '偿债能力', max: 100 },
+                  { name: '运营能力', max: 100 },
+                  { name: '成长能力', max: 100 },
+                  { name: '现金流', max: 100 }
+                ],
+                radius: '60%',
+                center: ['50%', '50%'],
+                splitArea: {
+                  areaStyle: {
+                    color: ['rgba(59, 130, 246, 0.1)', 'rgba(147, 51, 234, 0.1)']
+                  }
+                },
+                axisLine: {
+                  lineStyle: {
+                    color: 'rgba(255, 255, 255, 0.5)'
+                  }
+                },
+                splitLine: {
+                  lineStyle: {
+                    color: 'rgba(255, 255, 255, 0.5)'
+                  }
+                },
+                axisName: {
+                  textStyle: {
+                    color: '#fff',
+                    fontSize: 12
+                  }
+                }
+              },
+              series: [
+                {
+                  name: '企业健康指数',
+                  type: 'radar',
+                  data: [
+                    {
+                      value: healthData,
+                      name: '企业健康指数',
+                      areaStyle: {
+                        color: 'rgba(147, 51, 234, 0.3)'
+                      },
+                      lineStyle: {
+                        color: '#9333EA',
+                        width: 3
+                      },
+                      itemStyle: {
+                        color: '#EC4899',
+                        borderWidth: 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            };
+            option && myChart.setOption(option);
+            // 窗口大小改变时重绘图表
+            window.addEventListener('resize', function() {
+              myChart.resize();
+            });
+          } else {
+            console.error('radarChart元素不存在');
+          }
+        }, 400);
+    });
+  </script>
+
+  <!-- 对话功能 -->
+  <script>
+    // 确保DOM加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM加载完成');
+
+      // 全局变量
+      let uploadedFile = null;
+
+      // 从本地存储加载聊天数据
+      function loadChatData() {
+        try {
+          const chatData = JSON.parse(localStorage.getItem('chatData') || '[]');
+          return chatData;
+        } catch (e) {
+          console.error('加载聊天数据失败:', e);
+          return [];
+        }
+      }
+
+      // 从本地存储加载图表数据
+      function loadChartData() {
+        try {
+          const chartData = JSON.parse(localStorage.getItem('chartData') || 'null');
+          return chartData;
+        } catch (e) {
+          console.error('加载图表数据失败:', e);
+          return null;
+        }
+      }
+
+      // 保存聊天数据到本地存储
+      function saveChatData(message, sender, data) {
+        try {
+          const chatData = JSON.parse(localStorage.getItem('chatData') || '[]');
+          chatData.push({
+            message,
+            sender,
+            timestamp: new Date().getTime(),
+            data
+          });
+          // 只保留最近50条消息
+          if (chatData.length > 50) {
+            chatData.splice(0, chatData.length - 50);
+          }
+          localStorage.setItem('chatData', JSON.stringify(chatData));
+        } catch (e) {
+          console.error('保存聊天数据失败:', e);
+        }
+      }
+
+      // 显示消息
+      function showMessage(message, sender, data) {
+        try {
+          const chatArea = document.getElementById('chatArea');
+          if (!chatArea) {
+            console.error('chatArea元素不存在');
+            return;
+          }
+
+          const messageClass = sender === 'user' ? 'user-message' : 'system-message';
+
+          const messageElement = document.createElement('div');
+          messageElement.className = `chat-message ${messageClass}`;
+          messageElement.innerHTML = `<p>${message}</p>`;
+
+          chatArea.appendChild(messageElement);
+          chatArea.scrollTop = chatArea.scrollHeight;
+          console.log('消息已添加到聊天区域');
+
+          // 保存聊天数据到本地存储
+          saveChatData(message, sender, data);
+        } catch (e) {
+          console.error('显示消息失败:', e);
+        }
+      }
+
+      // 显示加载状态
+      function showLoading() {
+        try {
+          const chatArea = document.getElementById('chatArea');
+          if (!chatArea) {
+            console.error('chatArea元素不存在');
+            return;
+          }
+
+          const loadingElement = document.createElement('div');
+          loadingElement.className = 'chat-message system-message';
+          loadingElement.innerHTML = '<p class="loading-text">正在分析中...</p>';
+
+          chatArea.appendChild(loadingElement);
+          chatArea.scrollTop = chatArea.scrollHeight;
+          console.log('加载状态已显示');
+        } catch (e) {
+          console.error('显示加载状态失败:', e);
+        }
+      }
+
+      // 移除加载状态
+      function removeLoading() {
+        try {
+          const loadingMessages = document.querySelectorAll('.chat-message.system-message:last-child');
+          loadingMessages.forEach(function(element) {
+            if (element.querySelector('.loading-text')) {
+              element.remove();
+            }
+          });
+          console.log('加载状态已移除');
+        } catch (e) {
+          console.error('移除加载状态失败:', e);
+        }
+      }
+
+      // 更新图表数据
+      function updateChartData() {
+        try {
+          const chartData = loadChartData();
+          if (chartData) {
+            console.log('更新图表数据:', chartData);
+            // 这里可以根据需要更新各个图表
+            // 例如更新财务趋势图表
+            if (chartData.type === 'financial' && chartData.data) {
+              // 可以在这里更新对应的图表
+            }
+          }
+        } catch (e) {
+          console.error('更新图表数据失败:', e);
+        }
+      }
+
+      // 发送消息
+      function sendMessage() {
+        try {
+          const userInput = document.getElementById('userInput').value.trim();
+          if (!userInput && !uploadedFile) return;
+
+          // 显示用户消息
+          if (userInput) {
+            showMessage(userInput, 'user', { type: 'user_input', content: userInput });
+            document.getElementById('userInput').value = '';
+          }
+
+          // 显示加载状态
+          showLoading();
+
+          // 准备表单数据
+          const formData = new FormData();
+          if (uploadedFile) {
+            formData.append('file', uploadedFile);
+          }
+          if (userInput) {
+            formData.append('message', userInput);
+          }
+
+          // 模拟后端响应
+          setTimeout(function() {
+            removeLoading();
+
+            // 根据用户输入生成响应
+            let responseMessage = '';
+            if (userInput.includes('成本结构')) {
+              responseMessage = '根据成本分析图表，原材料成本占比最高，达到120万元，建议优化原材料采购策略，降低采购成本。';
+            } else if (userInput.includes('资产结构')) {
+              responseMessage = '资产结构分析显示，流动资产占比45%，固定资产占比25%，无形资产占比15%，其他资产占比15%。资产结构较为合理，建议适当增加无形资产投资。';
+            } else if (userInput.includes('财务趋势')) {
+              responseMessage = '财务趋势分析显示，收入和利润都呈现上升趋势，特别是3月和6月增长明显。建议继续保持当前的经营策略，同时注意控制成本。';
+            } else if (userInput.includes('企业健康')) {
+              responseMessage = '企业健康评估显示，盈利能力和运营能力表现优秀，偿债能力和成长能力良好，现金流一般。建议加强现金流管理，提高资金使用效率。';
+            } else {
+              responseMessage = '感谢您的提问。我是企业数字大脑的智能分析助手，可以帮您分析财务数据、解读图表信息、提供决策建议。请问您需要了解哪方面的财务分析？';
+            }
+
+            showMessage(responseMessage, 'system', { type: 'analysis_result', message: responseMessage });
+          }, 1000);
+        } catch (e) {
+          removeLoading();
+          console.error('发送消息失败:', e);
+          showMessage('分析失败，请重试！', 'system', { type: 'error', message: '发送失败' });
+        }
+      }
+
+      // 快捷问题
+      window.sendQuickQuestion = function(question) {
+        document.getElementById('userInput').value = question;
+        sendMessage();
+      };
+
+      // 文件上传处理
+      const fileUpload = document.getElementById('fileUpload');
+      if (fileUpload) {
+        fileUpload.addEventListener('change', function(e) {
+          uploadedFile = e.target.files[0];
+          if (uploadedFile) {
+            showMessage(`已选择文件：${uploadedFile.name}`, 'system', { type: 'file_upload', filename: uploadedFile.name });
+          }
+        });
+      }
+
+      // 发送按钮点击事件
+      const sendBtn = document.getElementById('sendBtn');
+      if (sendBtn) {
+        sendBtn.addEventListener('click', sendMessage);
+      }
+
+      // 回车键发送消息
+      const userInput = document.getElementById('userInput');
+      if (userInput) {
+        userInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            sendMessage();
+          }
+        });
+      }
+
+      // 加载历史聊天数据
+      function loadHistoryChatData() {
+        const chatData = loadChatData();
+        if (chatData.length > 0) {
+          // 清空聊天区域
+          const chatArea = document.getElementById('chatArea');
+          if (chatArea) {
+            chatArea.innerHTML = '';
+          }
+          // 显示历史消息
+          chatData.forEach(function(item) {
+            showMessage(item.message, item.sender, item.data);
+          });
+        } else {
+          // 显示欢迎消息
+          showMessage('欢迎使用企业数字大脑智能分析助手！我可以帮您分析财务数据、解读图表信息、提供决策建议。请问您需要了解哪方面的财务分析？', 'system', { type: 'welcome' });
+        }
+      }
+
+      // 页面加载完成后加载历史数据并更新图表
+      setTimeout(function() {
+        loadHistoryChatData();
+        updateChartData();
+      }, 500);
+
+      console.log('所有事件监听器已添加');
+    });
+
+    // 清空聊天内容
+    function clearChat() {
+      try {
+        // 清空聊天区域
+        const chatArea = document.getElementById('chatArea');
+        if (chatArea) {
+          chatArea.innerHTML = '';
+        }
+
+        // 清空本地存储
+        localStorage.removeItem('chatData');
+
+        // 显示欢迎消息
+        setTimeout(function() {
+          showMessage('欢迎使用企业数字大脑智能分析助手！我可以帮您分析财务数据、解读图表信息、提供决策建议。请问您需要了解哪方面的财务分析？', 'system', { type: 'welcome' });
+        }, 100);
+
+        console.log('聊天内容已清空');
+      } catch (e) {
+        console.error('清空聊天内容失败:', e);
+      }
+    }
+  </script>
+
 </body>
 </html>
