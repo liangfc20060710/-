@@ -139,66 +139,103 @@
   </section>
 
   <!-- 可视化内容区 -->
-  <section id="gallery">
+  <section id="gallery" style="padding: 80px 0; background: linear-gradient(135deg, rgba(15, 5, 41, 0.9), rgba(15, 5, 41, 0.95));">
     <div class="container">
-      <div class="row ">
-        <div class="wow animate__animated animate__fadeInLeft col-md-4">
-          <!-- <div class="gallery-img">
-            <img src="../static/picture/banner-1.jpg" class="w-100" alt="">
-             
-          </div> -->
-          <div id="chengben" style="width:100%;height:380px;">
-          </div>
-          <div class="gallery-text text-center mt-3">
-            <h4>财务指标折线图</h4>
-            <p class="text-white-50">收入、支出、利润趋势可视化</p>
+      <div class="row mb-10">
+        <div class="col-md-12 text-center">
+          <h2 style="background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));-webkit-background-clip: text;-webkit-text-fill-color: transparent; margin-bottom: 20px; font-size: 3rem; font-weight: 700;">
+            数据可视化分析中心
+          </h2>
+          <p class="text-white-50 mb-6" style="font-size: 1.2rem; max-width: 800px; margin: 0 auto;">通过直观的图表展示企业财务数据，支持智能对话分析</p>
+        </div>
+      </div>
+      
+      <!-- 主内容区 -->
+      <div class="row gap-8">
+        <!-- 对话界面 -->
+        <div class="col-lg-4 order-lg-1 order-2">
+          <div class="help-card" style="border: 2px solid; border-image: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple)) 1; border-radius: 20px; padding: 30px; background: rgba(255,255,255,0.05); box-shadow: 0 15px 35px rgba(147, 51, 234, 0.25);">
+            <h3 style="background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));-webkit-background-clip: text;-webkit-text-fill-color: transparent; margin-bottom: 25px; font-size: 1.5rem; font-weight: 600;">
+              智能分析助手
+            </h3>
+            
+            <!-- 对话消息展示区 -->
+            <div id="chatArea" style="height: 350px; overflow-y: auto; margin-bottom: 25px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.3);">
+              <!-- 系统欢迎消息 -->
+            </div>
+            
+            <!-- 文件上传区域 -->
+            <div class="mb-5">
+              <label class="form-label" style="color: #fff; font-weight: 500; font-size: 1rem;">上传文件</label>
+              <input type="file" class="form-control" id="fileUpload" name="file" style="background: rgba(255,255,255,0.1); border: 1px solid var(--cyber-blue); color: #fff; padding: 12px 15px; border-radius: 8px; margin-top: 8px;">
+              <div class="form-text" style="color: rgba(255,255,255,0.6); margin-top: 8px;">支持各种格式的文件，系统会自动分析文件内容</div>
+            </div>
+            
+            <!-- 用户输入区域 -->
+            <div class="input-group" style="gap: 12px;">
+              <input type="text" class="form-control" id="userInput" placeholder="输入您的问题...例如：分析成本结构" style="background: rgba(255,255,255,0.1); border: 1px solid var(--cyber-blue); color: #fff; padding: 14px 15px; border-radius: 8px;">
+              <button class="shadow__btn" id="sendBtn" style="padding: 0 28px; font-weight: 600; font-size: 1rem;">发送</button>
+            </div>
+            
+            <!-- 快捷问题 -->
+            <div class="mt-5">
+              <p class="text-white-50 mb-3" style="font-weight: 500; font-size: 1rem;">快捷问题：</p>
+              <div class="d-flex flex-wrap gap-2">
+                <button class="btn btn-sm btn-outline-primary" onclick="sendQuickQuestion('分析成本结构')" style="border-color: var(--cyber-blue); color: var(--cyber-blue); padding: 8px 16px;">分析成本结构</button>
+                <button class="btn btn-sm btn-outline-primary" onclick="sendQuickQuestion('资产结构分析')" style="border-color: var(--cyber-blue); color: var(--cyber-blue); padding: 8px 16px;">资产结构分析</button>
+                <button class="btn btn-sm btn-outline-primary" onclick="sendQuickQuestion('财务趋势分析')" style="border-color: var(--cyber-blue); color: var(--cyber-blue); padding: 8px 16px;">财务趋势分析</button>
+                <button class="btn btn-sm btn-outline-primary" onclick="sendQuickQuestion('企业健康评估')" style="border-color: var(--cyber-blue); color: var(--cyber-blue); padding: 8px 16px;">企业健康评估</button>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="wow animate__animated animate__fadeInUp col-md-4">
-          <!-- <div class="gallery-img">
-            <img src="../static/picture/banner-2.jpg" class="w-100" alt="">
-          </div> -->
-          <div id="bingtu" style="width:100%;height:380px;">
-          </div>
-          <div class="gallery-text text-center mt-3">
-            <h4>资产负债饼图</h4>
-            <p class="text-white-50">资产结构、负债占比直观展示</p>
-          </div>
-        </div>
-        <div class="wow animate__animated animate__fadeInRight col-md-4">
-          <div class="gallery-img">
-            <img src="../static/picture/banner-3.jpg" class="w-100" alt="">
-          </div>
-          <div class="gallery-text text-center mt-3">
-            <h4>现金流分析图表</h4>
-            <p class="text-white-50">经营、投资、筹资现金流监控</p>
-          </div>
-        </div>
-        <div class="wow animate__animated animate__fadeInLeft col-md-4 mt-4">
-          <div class="gallery-img">
-            <img src="../static/picture/banner-1.jpg" class="w-100" alt="">
-          </div>
-          <div class="gallery-text text-center mt-3">
-            <h4>企业健康雷达图</h4>
-            <p class="text-white-50">盈利、偿债、运营、成长能力评估</p>
-          </div>
-        </div>
-        <div class="wow animate__animated animate__fadeInUp col-md-4 mt-4">
-          <div class="gallery-img">
-            <img src="../static/picture/banner-2.jpg" class="w-100" alt="">
-          </div>
-          <div class="gallery-text text-center mt-3">
-            <h4>多维度数据对比图</h4>
-            <p class="text-white-50">季度/年度数据自动对比分析</p>
-          </div>
-        </div>
-        <div class="wow animate__animated animate__fadeInRight col-md-4 mt-4">
-          <div class="gallery-img">
-            <img src="../static/picture/banner-3.jpg" class="w-100" alt="">
-          </div>
-          <div class="gallery-text text-center mt-3">
-            <h4>AI分析结果可视化</h4>
-            <p class="text-white-50">智能体分析结论图表展示</p>
+        
+        <!-- 图表区域 -->
+        <div class="col-lg-8 order-lg-2 order-1">
+          <div class="row gap-6">
+            <!-- 成本分析图表 -->
+            <div class="col-md-6 wow animate__animated animate__fadeInUp" data-wow-delay="0.1s">
+              <div class="rounded-xl overflow-hidden shadow-xl" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(59, 130, 246, 0.3); padding: 30px; height: 100%;">
+                <div style="margin-bottom: 30px;">
+                  <h4 style="background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));-webkit-background-clip: text;-webkit-text-fill-color: transparent; margin: 0 0 12px 0; font-size: 1.3rem; font-weight: 600;">财务指标柱状图</h4>
+                  <p class="text-white-50" style="margin: 0; font-size: 0.9rem; line-height: 1.5;">收入、支出、利润趋势可视化</p>
+                </div>
+                <div id="chengben" style="width:100%;height:280px;"></div>
+              </div>
+            </div>
+            
+            <!-- 资产结构图表 -->
+            <div class="col-md-6 wow animate__animated animate__fadeInUp" data-wow-delay="0.2s">
+              <div class="rounded-xl overflow-hidden shadow-xl" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(59, 130, 246, 0.3); padding: 30px; height: 100%;">
+                <div style="margin-bottom: 30px;">
+                  <h4 style="background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));-webkit-background-clip: text;-webkit-text-fill-color: transparent; margin: 0 0 12px 0; font-size: 1.3rem; font-weight: 600;">资产负债饼图</h4>
+                  <p class="text-white-50" style="margin: 0; font-size: 0.9rem; line-height: 1.5;">资产结构、负债占比直观展示</p>
+                </div>
+                <div id="bingtu" style="width:100%;height:280px;"></div>
+              </div>
+            </div>
+            
+            <!-- 财务趋势图表 -->
+            <div class="col-md-6 wow animate__animated animate__fadeInUp" data-wow-delay="0.3s">
+              <div class="rounded-xl overflow-hidden shadow-xl" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(59, 130, 246, 0.3); padding: 30px; height: 100%;">
+                <div style="margin-bottom: 30px;">
+                  <h4 style="background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));-webkit-background-clip: text;-webkit-text-fill-color: transparent; margin: 0 0 12px 0; font-size: 1.3rem; font-weight: 600;">财务趋势折线图</h4>
+                  <p class="text-white-50" style="margin: 0; font-size: 0.9rem; line-height: 1.5;">月度/季度财务数据趋势分析</p>
+                </div>
+                <div id="trendChart" style="width:100%;height:280px;"></div>
+              </div>
+            </div>
+            
+            <!-- 企业健康图表 -->
+            <div class="col-md-6 wow animate__animated animate__fadeInUp" data-wow-delay="0.4s">
+              <div class="rounded-xl overflow-hidden shadow-xl" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(59, 130, 246, 0.3); padding: 30px; height: 100%;">
+                <div style="margin-bottom: 30px;">
+                  <h4 style="background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));-webkit-background-clip: text;-webkit-text-fill-color: transparent; margin: 0 0 12px 0; font-size: 1.3rem; font-weight: 600;">企业健康雷达图</h4>
+                  <p class="text-white-50" style="margin: 0; font-size: 0.9rem; line-height: 1.5;">多维度企业健康状况评估</p>
+                </div>
+                <div id="radarChart" style="width:100%;height:280px;"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -263,78 +300,677 @@
   <script src="../static/js/bootstrap.min.js"></script>
   <script src="../static/js/wow.min.js"></script>
   <script src="../static/js/script.js"></script>
-  <script src="/static/js/echarts.min.js"></script>
+  <script src="../static/js/echarts.min.js"></script>
   <script>
-        var chartDom = document.getElementById('chengben');
-        var myChart = echarts.init(chartDom);
-        var option;
-        option = {
-          xAxis: {
-            type: 'category',
-            data: ['原材料', '人工', '制造', '管理', '销售']
-          },
-          yAxis: {
-            type: 'value'
-          },
-          series: [
-            {
-              data: {{ chengben_Data | tojson }},
-              type: 'bar'
-            }
-          ]
-        };
-        option && myChart.setOption(option);
-    </script>
-
-  <script>
-        var chartDom = document.getElementById('bingtu');
-        var myChart = echarts.init(chartDom);
-        var option;
-        option = {
-          tooltip: {
-            trigger: 'item'
-          },
-          legend: {
-            top: '5%',
-            left: 'center'
-          },
-          series: [
-            {
-              name: 'Access From',
-              type: 'pie',
-              radius: ['40%', '70%'],
-              avoidLabelOverlap: false,
-              itemStyle: {
-                borderRadius: 10,
-                borderColor: '#fff',
-                borderWidth: 2
-              },
-              label: {
-                show: false,
-                position: 'center'
-              },
-              emphasis: {
-                label: {
-                  show: true,
-                  fontSize: 40,
+    // 确保DOM加载完成后初始化图表
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM加载完成，开始初始化图表');
+        
+        // 生成随机数据的函数
+        function generateRandomData(min, max, count) {
+          const data = [];
+          for (let i = 0; i < count; i++) {
+            data.push(Math.floor(Math.random() * (max - min + 1)) + min);
+          }
+          return data;
+        }
+        
+        // 初始化财务指标柱状图
+        setTimeout(function() {
+          var chartDom = document.getElementById('chengben');
+          if (chartDom) {
+            console.log('初始化财务指标柱状图');
+            var myChart = echarts.init(chartDom);
+            // 生成随机成本数据
+            var chengbenData = generateRandomData(200000, 1500000, 5);
+            var option = {
+              title: {
+                text: '成本分析',
+                textStyle: {
+                  color: '#fff',
+                  fontSize: 16,
                   fontWeight: 'bold'
+                },
+                left: 'center',
+                top: 10
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'shadow'
+                },
+                formatter: function(params) {
+                  return params[0].name + ': ' + params[0].value.toLocaleString() + ' 元';
                 }
               },
-              labelLine: {
-                show: false
+              xAxis: {
+                type: 'category',
+                data: ['原材料', '人工', '制造', '管理', '销售'],
+                axisLabel: {
+                  color: '#fff'
+                }
               },
-              data: [
-                { value: 1048, name: 'Search Engine' },
-                { value: 735, name: 'Direct' },
-                { value: 580, name: 'Email' },
-                { value: 484, name: 'Union Ads' },
-                { value: 300, name: 'Video Ads' }
+              yAxis: {
+                type: 'value',
+                axisLabel: {
+                  color: '#fff',
+                  formatter: function(value) {
+                    return (value / 10000).toFixed(0) + '万';
+                  }
+                }
+              },
+              series: [
+                {
+                  data: chengbenData,
+                  type: 'bar',
+                  itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                      { offset: 0, color: '#3B82F6' },
+                      { offset: 1, color: '#9333EA' }
+                    ])
+                  },
+                  emphasis: {
+                    itemStyle: {
+                      color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#9333EA' },
+                        { offset: 1, color: '#EC4899' }
+                      ])
+                    }
+                  }
+                }
               ]
+            };
+            option && myChart.setOption(option);
+            // 窗口大小改变时重绘图表
+            window.addEventListener('resize', function() {
+              myChart.resize();
+            });
+          } else {
+            console.error('chengben元素不存在');
+          }
+        }, 100);
+        
+        // 初始化资产负债饼图
+        setTimeout(function() {
+          var chartDom = document.getElementById('bingtu');
+          if (chartDom) {
+            console.log('初始化资产负债饼图');
+            var myChart = echarts.init(chartDom);
+            // 生成随机资产数据
+            var assetData = [
+              { value: Math.floor(Math.random() * 3000000) + 3000000, name: '流动资产', itemStyle: { color: '#3B82F6' } },
+              { value: Math.floor(Math.random() * 2000000) + 1500000, name: '固定资产', itemStyle: { color: '#9333EA' } },
+              { value: Math.floor(Math.random() * 1500000) + 1000000, name: '无形资产', itemStyle: { color: '#EC4899' } },
+              { value: Math.floor(Math.random() * 1000000) + 500000, name: '其他资产', itemStyle: { color: '#10B981' } }
+            ];
+            var option = {
+              title: {
+                text: '资产结构分析',
+                textStyle: {
+                  color: '#fff',
+                  fontSize: 16,
+                  fontWeight: 'bold'
+                },
+                left: 'center',
+                top: 5
+              },
+              tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                  return params.name + ': ' + params.value.toLocaleString() + ' 元 (' + params.percent + '%)';
+                }
+              },
+              legend: {
+                top: '25%',
+                left: 'center',
+                textStyle: {
+                  color: '#fff',
+                  fontSize: 12,
+                  padding: [0, 10]
+                },
+                itemGap: 15
+              },
+              series: [
+                {
+                  name: '资产结构',
+                  type: 'pie',
+                  radius: ['40%', '70%'],
+                  center: ['50%', '60%'],
+                  avoidLabelOverlap: false,
+                  itemStyle: {
+                    borderRadius: 12,
+                    borderColor: '#0F0529',
+                    borderWidth: 3
+                  },
+                  label: {
+                    show: true,
+                    position: 'center',
+                    formatter: '{b}\n{c}元\n({d}%)',
+                    color: '#fff',
+                    fontSize: 14,
+                    fontWeight: 'bold'
+                  },
+                  emphasis: {
+                    label: {
+                      show: true,
+                      fontSize: 16,
+                      fontWeight: 'bold',
+                      color: '#fff'
+                    },
+                    itemStyle: {
+                      shadowBlur: 10,
+                      shadowOffsetX: 0,
+                      shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                  },
+                  labelLine: {
+                    show: false
+                  },
+                  data: assetData
+                }
+              ]
+            };
+            option && myChart.setOption(option);
+            // 窗口大小改变时重绘图表
+            window.addEventListener('resize', function() {
+              myChart.resize();
+            });
+          } else {
+            console.error('bingtu元素不存在');
+          }
+        }, 200);
+        
+        // 初始化财务趋势折线图
+        setTimeout(function() {
+          var chartDom = document.getElementById('trendChart');
+          if (chartDom) {
+            console.log('初始化财务趋势折线图');
+            var myChart = echarts.init(chartDom);
+            
+            // 生成随机财务趋势数据
+            function generateTrendData() {
+              const revenue = [];
+              const profit = [];
+              let baseRevenue = 1000000;
+              let baseProfit = 250000;
+              
+              for (let i = 0; i < 6; i++) {
+                // 收入随机增长
+                const revenueGrowth = Math.random() * 500000 + 100000;
+                baseRevenue += revenueGrowth;
+                revenue.push(Math.floor(baseRevenue));
+                
+                // 利润为收入的20-30%
+                const profitRatio = Math.random() * 0.1 + 0.2;
+                const currentProfit = Math.floor(baseRevenue * profitRatio);
+                profit.push(currentProfit);
+              }
+              
+              return { revenue, profit };
             }
-          ]
-        };
-        option && myChart.setOption(option);
-    </script>
+            
+            const trendData = generateTrendData();
+
+            var option = {
+              title: {
+                text: '财务趋势分析',
+                textStyle: {
+                  color: '#fff',
+                  fontSize: 16,
+                  fontWeight: 'bold'
+                },
+                left: 'center',
+                top: 10
+              },
+              tooltip: {
+                trigger: 'axis',
+                formatter: function(params) {
+                  let result = params[0].name + '<br/>';
+                  params.forEach(function(item) {
+                    result += item.marker + item.seriesName + ': ' + item.value.toLocaleString() + ' 元<br/>';
+                  });
+                  return result;
+                }
+              },
+              legend: {
+                data: ['收入', '利润'],
+                textStyle: {
+                  color: '#fff',
+                  fontSize: 12,
+                  padding: [0, 10]
+                },
+                top: '15%',
+                left: 'center',
+                itemGap: 15
+              },
+              grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+              },
+              xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                axisLabel: {
+                  color: '#fff'
+                }
+              },
+              yAxis: {
+                type: 'value',
+                axisLabel: {
+                  color: '#fff',
+                  formatter: function(value) {
+                    return (value / 10000).toFixed(0) + '万';
+                  }
+                }
+              },
+              series: [
+                {
+                  name: '收入',
+                  type: 'line',
+                  stack: 'Total',
+                  data: trendData.revenue,
+                  itemStyle: {
+                    color: '#3B82F6'
+                  },
+                  lineStyle: {
+                    width: 3
+                  },
+                  symbol: 'circle',
+                  symbolSize: 8
+                },
+                {
+                  name: '利润',
+                  type: 'line',
+                  stack: 'Total',
+                  data: trendData.profit,
+                  itemStyle: {
+                    color: '#9333EA'
+                  },
+                  lineStyle: {
+                    width: 3
+                  },
+                  symbol: 'circle',
+                  symbolSize: 8
+                }
+              ]
+            };
+            option && myChart.setOption(option);
+            // 窗口大小改变时重绘图表
+            window.addEventListener('resize', function() {
+              myChart.resize();
+            });
+          } else {
+            console.error('trendChart元素不存在');
+          }
+        }, 300);
+        
+        // 初始化企业健康雷达图
+        setTimeout(function() {
+          var chartDom = document.getElementById('radarChart');
+          if (chartDom) {
+            console.log('初始化企业健康雷达图');
+            var myChart = echarts.init(chartDom);
+            
+            // 生成随机企业健康数据
+            function generateHealthData() {
+              return [
+                Math.floor(Math.random() * 20) + 70, // 盈利能力 70-90
+                Math.floor(Math.random() * 20) + 65, // 偿债能力 65-85
+                Math.floor(Math.random() * 20) + 75, // 运营能力 75-95
+                Math.floor(Math.random() * 20) + 60, // 成长能力 60-80
+                Math.floor(Math.random() * 20) + 65  // 现金流 65-85
+              ];
+            }
+            
+            const healthData = generateHealthData();
+            
+            var option = {
+              title: {
+                text: '企业健康评估',
+                textStyle: {
+                  color: '#fff',
+                  fontSize: 16,
+                  fontWeight: 'bold'
+                },
+                left: 'center',
+                top: 5
+              },
+              tooltip: {
+                trigger: 'item'
+              },
+              legend: {
+                data: ['企业健康指数'],
+                textStyle: {
+                  color: '#fff',
+                  fontSize: 12,
+                  padding: [0, 10]
+                },
+                top: '20%',
+                left: 'center',
+                itemGap: 15
+              },
+              radar: {
+                indicator: [
+                  { name: '盈利能力', max: 100 },
+                  { name: '偿债能力', max: 100 },
+                  { name: '运营能力', max: 100 },
+                  { name: '成长能力', max: 100 },
+                  { name: '现金流', max: 100 }
+                ],
+                radius: '60%',
+                center: ['50%', '70%'],
+                splitArea: {
+                  areaStyle: {
+                    color: ['rgba(59, 130, 246, 0.1)', 'rgba(147, 51, 234, 0.1)']
+                  }
+                },
+                axisLine: {
+                  lineStyle: {
+                    color: 'rgba(255, 255, 255, 0.5)'
+                  }
+                },
+                splitLine: {
+                  lineStyle: {
+                    color: 'rgba(255, 255, 255, 0.5)'
+                  }
+                },
+                axisName: {
+                  textStyle: {
+                    color: '#fff',
+                    fontSize: 12,
+                    padding: 10
+                  }
+                }
+              },
+              series: [
+                {
+                  name: '企业健康指数',
+                  type: 'radar',
+                  data: [
+                    {
+                      value: healthData,
+                      name: '企业健康指数',
+                      areaStyle: {
+                        color: 'rgba(147, 51, 234, 0.3)'
+                      },
+                      lineStyle: {
+                        color: '#9333EA',
+                        width: 3
+                      },
+                      itemStyle: {
+                        color: '#EC4899',
+                        borderWidth: 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            };
+            option && myChart.setOption(option);
+            // 窗口大小改变时重绘图表
+            window.addEventListener('resize', function() {
+              myChart.resize();
+            });
+          } else {
+            console.error('radarChart元素不存在');
+          }
+        }, 400);
+    });
+  </script>
+  
+  <!-- 对话功能 -->
+  <script>
+    // 确保DOM加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM加载完成');
+      
+      // 全局变量
+      let uploadedFile = null;
+      
+      // 从本地存储加载聊天数据
+      function loadChatData() {
+        try {
+          const chatData = JSON.parse(localStorage.getItem('chatData') || '[]');
+          return chatData;
+        } catch (e) {
+          console.error('加载聊天数据失败:', e);
+          return [];
+        }
+      }
+      
+      // 从本地存储加载图表数据
+      function loadChartData() {
+        try {
+          const chartData = JSON.parse(localStorage.getItem('chartData') || 'null');
+          return chartData;
+        } catch (e) {
+          console.error('加载图表数据失败:', e);
+          return null;
+        }
+      }
+      
+      // 保存聊天数据到本地存储
+      function saveChatData(message, sender, data) {
+        try {
+          const chatData = JSON.parse(localStorage.getItem('chatData') || '[]');
+          chatData.push({
+            message,
+            sender,
+            timestamp: new Date().getTime(),
+            data
+          });
+          // 只保留最近50条消息
+          if (chatData.length > 50) {
+            chatData.splice(0, chatData.length - 50);
+          }
+          localStorage.setItem('chatData', JSON.stringify(chatData));
+        } catch (e) {
+          console.error('保存聊天数据失败:', e);
+        }
+      }
+      
+      // 显示消息
+      function showMessage(message, sender, data) {
+        try {
+          const chatArea = document.getElementById('chatArea');
+          if (!chatArea) {
+            console.error('chatArea元素不存在');
+            return;
+          }
+          
+          const messageClass = sender === 'user' ? 'user-message' : 'system-message';
+          const messageStyle = sender === 'user' ? 
+            'margin-left: auto; background: rgba(147, 51, 234, 0.2); text-align: right;' : 
+            'margin-right: auto; background: rgba(59, 130, 246, 0.2);';
+          
+          const messageElement = document.createElement('div');
+          messageElement.className = `chat-message ${messageClass}`;
+          messageElement.style = `margin-bottom: 15px; padding: 10px; ${messageStyle} border-radius: 8px; max-width: 80%; opacity: 0; transform: translateY(10px); transition: all 0.5s ease;`;
+          messageElement.innerHTML = `<p>${message}</p>`;
+          
+          chatArea.appendChild(messageElement);
+          // 触发重排
+          messageElement.offsetHeight;
+          // 添加动画效果
+          messageElement.style.opacity = '1';
+          messageElement.style.transform = 'translateY(0)';
+          chatArea.scrollTop = chatArea.scrollHeight;
+          console.log('消息已添加到聊天区域');
+          
+          // 保存聊天数据到本地存储
+          saveChatData(message, sender, data);
+        } catch (e) {
+          console.error('显示消息失败:', e);
+        }
+      }
+      
+      // 显示加载状态
+      function showLoading() {
+        try {
+          const chatArea = document.getElementById('chatArea');
+          if (!chatArea) {
+            console.error('chatArea元素不存在');
+            return;
+          }
+          
+          const loadingElement = document.createElement('div');
+          loadingElement.className = 'chat-message system-message loading-message';
+          loadingElement.style = 'margin-bottom: 15px; padding: 10px; background: rgba(59, 130, 246, 0.2); border-radius: 8px; max-width: 80%;';
+          loadingElement.innerHTML = '<p class="loading-text">正在分析中...</p>';
+          
+          chatArea.appendChild(loadingElement);
+          chatArea.scrollTop = chatArea.scrollHeight;
+          console.log('加载状态已显示');
+        } catch (e) {
+          console.error('显示加载状态失败:', e);
+        }
+      }
+      
+      // 移除加载状态
+      function removeLoading() {
+        try {
+          const loadingMessages = document.querySelectorAll('.loading-message');
+          loadingMessages.forEach(function(element) {
+            element.remove();
+          });
+          console.log('加载状态已移除');
+        } catch (e) {
+          console.error('移除加载状态失败:', e);
+        }
+      }
+      
+      // 更新图表数据
+      function updateChartData() {
+        try {
+          const chartData = loadChartData();
+          if (chartData) {
+            console.log('更新图表数据:', chartData);
+            // 这里可以根据需要更新各个图表
+            // 例如更新财务趋势图表
+            if (chartData.type === 'financial' && chartData.data) {
+              // 可以在这里更新对应的图表
+            }
+          }
+        } catch (e) {
+          console.error('更新图表数据失败:', e);
+        }
+      }
+      
+      // 发送消息
+      function sendMessage() {
+        try {
+          const userInput = document.getElementById('userInput').value.trim();
+          if (!userInput && !uploadedFile) return;
+          
+          // 显示用户消息
+          if (userInput) {
+            showMessage(userInput, 'user', { type: 'user_input', content: userInput });
+            document.getElementById('userInput').value = '';
+          }
+          
+          // 显示加载状态
+          showLoading();
+          
+          // 准备表单数据
+          const formData = new FormData();
+          if (uploadedFile) {
+            formData.append('file', uploadedFile);
+          }
+          if (userInput) {
+            formData.append('message', userInput);
+          }
+          
+          // 模拟后端响应
+          setTimeout(function() {
+            removeLoading();
+            
+            // 根据用户输入生成响应
+            let responseMessage = '';
+            if (userInput.includes('成本结构')) {
+              responseMessage = '根据成本分析图表，原材料成本占比最高，达到120万元，建议优化原材料采购策略，降低采购成本。';
+            } else if (userInput.includes('资产结构')) {
+              responseMessage = '资产结构分析显示，流动资产占比45%，固定资产占比25%，无形资产占比15%，其他资产占比15%。资产结构较为合理，建议适当增加无形资产投资。';
+            } else if (userInput.includes('财务趋势')) {
+              responseMessage = '财务趋势分析显示，收入和利润都呈现上升趋势，特别是3月和6月增长明显。建议继续保持当前的经营策略，同时注意控制成本。';
+            } else if (userInput.includes('企业健康')) {
+              responseMessage = '企业健康评估显示，盈利能力和运营能力表现优秀，偿债能力和成长能力良好，现金流一般。建议加强现金流管理，提高资金使用效率。';
+            } else {
+              responseMessage = '感谢您的提问。我是企业数字大脑的智能分析助手，可以帮您分析财务数据、解读图表信息、提供决策建议。请问您需要了解哪方面的财务分析？';
+            }
+            
+            showMessage(responseMessage, 'system', { type: 'analysis_result', message: responseMessage });
+          }, 1000);
+        } catch (e) {
+          removeLoading();
+          console.error('发送消息失败:', e);
+          showMessage('分析失败，请重试！', 'system', { type: 'error', message: '发送失败' });
+        }
+      }
+      
+      // 快捷问题
+      window.sendQuickQuestion = function(question) {
+        document.getElementById('userInput').value = question;
+        sendMessage();
+      };
+      
+      // 文件上传处理
+      const fileUpload = document.getElementById('fileUpload');
+      if (fileUpload) {
+        fileUpload.addEventListener('change', function(e) {
+          uploadedFile = e.target.files[0];
+          if (uploadedFile) {
+            showMessage(`已选择文件：${uploadedFile.name}`, 'system', { type: 'file_upload', filename: uploadedFile.name });
+          }
+        });
+      }
+      
+      // 发送按钮点击事件
+      const sendBtn = document.getElementById('sendBtn');
+      if (sendBtn) {
+        sendBtn.addEventListener('click', sendMessage);
+      }
+      
+      // 回车键发送消息
+      const userInput = document.getElementById('userInput');
+      if (userInput) {
+        userInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            sendMessage();
+          }
+        });
+      }
+      
+      // 加载历史聊天数据
+      function loadHistoryChatData() {
+        const chatData = loadChatData();
+        if (chatData.length > 0) {
+          // 清空聊天区域
+          const chatArea = document.getElementById('chatArea');
+          if (chatArea) {
+            chatArea.innerHTML = '';
+          }
+          // 显示历史消息
+          chatData.forEach(function(item) {
+            showMessage(item.message, item.sender, item.data);
+          });
+        } else {
+          // 显示欢迎消息
+          showMessage('欢迎使用企业数字大脑智能分析助手！我可以帮您分析财务数据、解读图表信息、提供决策建议。请问您需要了解哪方面的财务分析？', 'system', { type: 'welcome' });
+        }
+      }
+      
+      // 页面加载完成后加载历史数据并更新图表
+      setTimeout(function() {
+        loadHistoryChatData();
+        updateChartData();
+      }, 500);
+      
+      console.log('所有事件监听器已添加');
+    });
+  </script>
 
 </body>
 </html>

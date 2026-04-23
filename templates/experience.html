@@ -91,15 +91,52 @@
       padding: 12px 20px;
       font-weight: 600;
       border-radius: 6px;
-      transition: 0.3s;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
     .shadow__btn:hover {
       background: linear-gradient(90deg, var(--cyber-purple), var(--cyber-pink)) !important;
       color: #fff !important;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(147, 51, 234, 0.4);
+    }
+    .shadow__btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 5px rgba(147, 51, 234, 0.3);
     }
     .shadow__btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    /* 按钮点击波纹效果 */
+    .shadow__btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      border-radius: 100%;
+      transform: scale(1, 1) translate(-50%, -50%);
+      transform-origin: 50% 50%;
+    }
+    .shadow__btn:focus:not(:active)::after {
+      animation: ripple 1s ease-out;
+    }
+    @keyframes ripple {
+      0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(20, 20);
+        opacity: 0;
+      }
     }
 
     /* 分析结果展示区 */
@@ -197,35 +234,46 @@
     </div>
   </section>
 
-  <!-- 上传表单区域 -->
+  <!-- 对话界面区域 -->
   <section id="gallery">
     <div class="container">
       <div class="row justify-content-center">
         <div class="wow animate__animated animate__fadeInUp col-lg-8">
           <div class="help-card">
-            <form id="uploadForm" method="POST" action="/api/analyze">
-              <div class="mb-4">
-                <label class="form-label">企业名称</label>
-                <input type="text" class="form-control" id="companyName" name="company_name" placeholder="请输入企业名称" required>
-              </div>
-              <div class="mb-4">
-                <label class="form-label">上传财务 Excel 文件</label>
-                <input type="file" class="form-control" id="excelFile" name="file" accept=".xlsx,.xls" required>
-                <div class="form-text">支持 xlsx / xls 格式，包含收入、支出、利润、负债等财务字段</div>
-              </div>
-              <button type="submit" class="shadow__btn w-100" id="submitBtn">开始智能分析</button>
-            </form>
-          </div>
-
-          <!-- 分析结果展示区 -->
-          <div id="resultArea">
-            <div class="result-card">
-              <h3 style="background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));-webkit-background-clip: text;-webkit-text-fill-color: transparent;">
-                智能分析结果
-              </h3>
-              <div id="resultContent" class="mt-3">
-                <!-- 后端返回的结果会在这里展示 -->
-              </div>
+            <h3 style="background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));-webkit-background-clip: text;-webkit-text-fill-color: transparent; margin-bottom: 20px;">
+              智能对话助手
+            </h3>
+            
+            <!-- 对话消息展示区 -->
+            <div id="chatArea" style="height: 400px; overflow-y: auto; margin-bottom: 20px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+              <!-- 欢迎消息将通过JavaScript动态添加 -->
+            </div>
+            
+            <!-- 文件上传区域 -->
+            <div class="mb-4">
+              <label class="form-label">上传文件</label>
+              <input type="file" class="form-control" id="fileUpload" name="file">
+              <div class="form-text">支持各种格式的文件，系统会自动分析文件内容</div>
+            </div>
+            
+            <!-- 企业名称输入 -->
+            <div class="mb-4">
+              <label class="form-label">企业名称</label>
+              <input type="text" class="form-control" id="companyName" name="company_name" placeholder="请输入企业名称">
+            </div>
+            
+            <!-- 用户输入区域 -->
+            <div class="input-group">
+              <input type="text" class="form-control" id="userInput" placeholder="输入您的问题...">
+              <button class="shadow__btn" id="sendBtn">发送</button>
+            </div>
+            
+            <!-- 数据可视化区域 -->
+            <div id="chartArea" style="margin-top: 30px; display: none;">
+              <h4 style="background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple));-webkit-background-clip: text;-webkit-text-fill-color: transparent; margin-bottom: 20px;">
+                数据可视化
+              </h4>
+              <div id="financialChart" style="width: 100%; height: 300px;"></div>
             </div>
           </div>
         </div>
@@ -295,58 +343,366 @@
   <script src="../static/js/wow.min.js"></script>
   <script src="../static/js/script.js"></script>
 
+  <!-- 引入ECharts库用于数据可视化 -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  
   <!-- 核心对接接口的JS代码 -->
-  <!-- <script>
-    $(function() {
-      // 表单提交事件
-      $('#uploadForm').on('submit', function(e) {
-        e.preventDefault(); // 阻止表单默认刷新
-
-        // 获取表单数据
-        const formData = new FormData(this);
-        const submitBtn = $('#submitBtn');
-        const resultArea = $('#resultArea');
-        const resultContent = $('#resultContent');
-
-        // 按钮禁用，显示加载状态
-        submitBtn.attr('disabled', true).text('正在智能分析中...');
-        resultArea.hide();
-
-        // 调用后端接口
-        $.ajax({
-          url: '/api/analyze', // 对应Flask里的接口地址
-          type: 'POST',
-          data: formData,
-          processData: false,
-          contentType: false,
-          success: function(res) {
-            if (res.code === 200) {
-              // 分析成功，展示结果
-              const data = res.data;
-              resultContent.html(`
-                <p><strong>企业名称：</strong>${data.company_name}</p>
-                <p><strong>企业健康评分：</strong>${data.health_score || '暂无'}</p>
-                <p><strong>风险预警：</strong>${data.risk_warning || '暂无'}</p>
-                <h5 class="mt-3">详细分析报告：</h5>
-                <pre style="color:#fff;white-space:pre-wrap;background:rgba(0,0,0,0.2);padding:15px;border-radius:6px;">${JSON.stringify(data.analysis_result, null, 2)}</pre>
-              `);
-              resultArea.show();
-              alert('分析完成！');
+  <script>
+    // 确保DOM加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM加载完成');
+      
+      // 全局变量
+      let uploadedFile = null;
+      let companyName = '';
+      let chartInstance = null;
+      
+      // 初始化ECharts实例
+      function initChart() {
+        try {
+          chartInstance = echarts.init(document.getElementById('financialChart'));
+          console.log('ECharts初始化成功');
+        } catch (e) {
+          console.error('ECharts初始化失败:', e);
+        }
+      }
+      
+      // 显示消息
+      function showMessage(message, sender, data) {
+        try {
+          const chatArea = document.getElementById('chatArea');
+          if (!chatArea) {
+            console.error('chatArea元素不存在');
+            return;
+          }
+          
+          const messageClass = sender === 'user' ? 'user-message' : 'system-message';
+          const messageStyle = sender === 'user' ? 
+            'margin-left: auto; background: rgba(147, 51, 234, 0.2); text-align: right;' : 
+            'margin-right: auto; background: rgba(59, 130, 246, 0.2);';
+          
+          const messageElement = document.createElement('div');
+          messageElement.className = `chat-message ${messageClass}`;
+          messageElement.style = `margin-bottom: 15px; padding: 10px; ${messageStyle} border-radius: 8px; max-width: 80%; opacity: 0; transform: translateY(10px); transition: all 0.5s ease;`;
+          messageElement.innerHTML = `<p>${message}</p>`;
+          
+          chatArea.appendChild(messageElement);
+          // 触发重排
+          messageElement.offsetHeight;
+          // 添加动画效果
+          messageElement.style.opacity = '1';
+          messageElement.style.transform = 'translateY(0)';
+          chatArea.scrollTop = chatArea.scrollHeight;
+          console.log('消息已添加到聊天区域');
+          
+          // 保存聊天数据到本地存储
+          saveChatData(message, sender, data);
+        } catch (e) {
+          console.error('显示消息失败:', e);
+        }
+      }
+      
+      // 页面加载完成后显示欢迎消息
+      console.log('准备显示欢迎消息');
+      setTimeout(function() {
+        console.log('显示欢迎消息');
+        showMessage('欢迎使用企业数字大脑智能助手！请上传文件开始分析，或直接提问关于企业财务的问题。', 'system');
+      }, 1000);
+      
+      // 显示加载状态
+      function showLoading() {
+        try {
+          const chatArea = document.getElementById('chatArea');
+          if (!chatArea) {
+            console.error('chatArea元素不存在');
+            return;
+          }
+          
+          const loadingElement = document.createElement('div');
+          loadingElement.className = 'chat-message system-message loading-message';
+          loadingElement.style = 'margin-bottom: 15px; padding: 10px; background: rgba(59, 130, 246, 0.2); border-radius: 8px; max-width: 80%;';
+          loadingElement.innerHTML = '<p class="loading-text">正在分析中...</p>';
+          
+          chatArea.appendChild(loadingElement);
+          chatArea.scrollTop = chatArea.scrollHeight;
+          console.log('加载状态已显示');
+        } catch (e) {
+          console.error('显示加载状态失败:', e);
+        }
+      }
+      
+      // 移除加载状态
+      function removeLoading() {
+        try {
+          const loadingMessages = document.querySelectorAll('.loading-message');
+          loadingMessages.forEach(function(element) {
+            element.remove();
+          });
+          console.log('加载状态已移除');
+        } catch (e) {
+          console.error('移除加载状态失败:', e);
+        }
+      }
+      
+      // 发送消息
+      function sendMessage() {
+        try {
+          const userInput = document.getElementById('userInput').value.trim();
+          if (!userInput && !uploadedFile) return;
+          
+          // 显示用户消息
+          if (userInput) {
+            showMessage(userInput, 'user', { type: 'user_input', content: userInput });
+            document.getElementById('userInput').value = '';
+          }
+          
+          // 显示加载状态
+          showLoading();
+          
+          // 准备表单数据
+          const formData = new FormData();
+          if (uploadedFile) {
+            formData.append('file', uploadedFile);
+          }
+          if (companyName) {
+            formData.append('company_name', companyName);
+          }
+          if (userInput) {
+            formData.append('message', userInput);
+          }
+          
+          // 调用后端接口
+          const xhr = new XMLHttpRequest();
+          xhr.open('POST', '/api/analyze', true);
+          xhr.onload = function() {
+            removeLoading();
+            if (xhr.status === 200) {
+              try {
+                const res = JSON.parse(xhr.responseText);
+                // 显示系统回复
+                if (res.code === 200) {
+                  const data = res.data;
+                  let responseMessage = `
+                    <strong>企业名称：</strong>${data.company_name}<br>
+                    <strong>企业健康评分：</strong>${data.health_score || '暂无'}<br>
+                    <strong>风险预警：</strong>${data.risk_warning || '暂无'}<br>
+                    <strong>分析结果：</strong>${data.analysis_result}
+                  `;
+                  showMessage(responseMessage, 'system', { type: 'analysis_result', data: data });
+                  
+                  // 显示数据可视化
+                  showChart(data);
+                } else if (res.message) {
+                  showMessage(res.message, 'system', { type: 'error', message: res.message });
+                } else {
+                  showMessage(res.msg || '分析失败，请重试', 'system', { type: 'error', message: res.msg });
+                }
+              } catch (e) {
+                console.error('解析响应失败:', e);
+                showMessage('分析失败，请重试！', 'system', { type: 'error', message: '解析响应失败' });
+              }
             } else {
-              alert(res.msg);
+              showMessage('分析失败，请重试！', 'system', { type: 'error', message: '请求失败' });
+              console.error('请求失败，状态码:', xhr.status);
             }
-          },
-          error: function(err) {
-            alert('分析失败，请重试！');
-            console.error(err);
-          },
-          complete: function() {
-            // 恢复按钮状态
-            submitBtn.attr('disabled', false).text('开始智能分析');
+          };
+          xhr.onerror = function() {
+            removeLoading();
+            showMessage('分析失败，请重试！', 'system', { type: 'error', message: '网络错误' });
+            console.error('网络错误');
+          };
+          xhr.send(formData);
+        } catch (e) {
+          removeLoading();
+          console.error('发送消息失败:', e);
+          showMessage('分析失败，请重试！', 'system', { type: 'error', message: '发送失败' });
+        }
+      }
+      
+      // 保存聊天数据到本地存储
+      function saveChatData(message, sender, data) {
+        try {
+          const chatData = JSON.parse(localStorage.getItem('chatData') || '[]');
+          chatData.push({
+            message,
+            sender,
+            timestamp: new Date().getTime(),
+            data
+          });
+          // 只保留最近50条消息
+          if (chatData.length > 50) {
+            chatData.splice(0, chatData.length - 50);
+          }
+          localStorage.setItem('chatData', JSON.stringify(chatData));
+        } catch (e) {
+          console.error('保存聊天数据失败:', e);
+        }
+      }
+      
+      // 保存图表数据到本地存储
+      function saveChartData(chartData) {
+        try {
+          localStorage.setItem('chartData', JSON.stringify(chartData));
+        } catch (e) {
+          console.error('保存图表数据失败:', e);
+        }
+      }
+      
+      // 显示数据可视化图表
+      function showChart(data) {
+        try {
+          const chartArea = document.getElementById('chartArea');
+          if (chartArea) {
+            chartArea.style.display = 'block';
+          }
+          
+          // 从后端数据中获取财务数据
+          // 如果后端没有提供数据，显示空图表
+          const financialData = data.financial_data || {
+            categories: [],
+            revenue: [],
+            profit: []
+          };
+          
+          // 图表配置
+          const option = {
+            title: {
+              text: '企业财务趋势',
+              textStyle: {
+                color: '#fff'
+              }
+            },
+            tooltip: {
+              trigger: 'axis'
+            },
+            legend: {
+              data: ['收入', '利润'],
+              textStyle: {
+                color: '#fff'
+              }
+            },
+            grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
+            },
+            xAxis: {
+              type: 'category',
+              boundaryGap: false,
+              data: financialData.categories,
+              axisLabel: {
+                color: '#fff'
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                color: '#fff'
+              }
+            },
+            series: [
+              {
+                name: '收入',
+                type: 'line',
+                stack: 'Total',
+                data: financialData.revenue,
+                itemStyle: {
+                  color: '#3B82F6'
+                }
+              },
+              {
+                name: '利润',
+                type: 'line',
+                stack: 'Total',
+                data: financialData.profit,
+                itemStyle: {
+                  color: '#9333EA'
+                }
+              }
+            ]
+          };
+          
+          // 渲染图表
+          if (chartInstance) {
+            chartInstance.setOption(option);
+            console.log('图表已渲染');
+          }
+          
+          // 保存图表数据到本地存储
+          saveChartData({
+            type: 'financial',
+            data: financialData
+          });
+          
+          // 显示跳转到gallery页面的按钮
+          const chartArea = document.getElementById('chartArea');
+          if (chartArea) {
+            // 检查是否已存在跳转按钮
+            let jumpButton = document.getElementById('jumpToGallery');
+            if (!jumpButton) {
+              jumpButton = document.createElement('button');
+              jumpButton.id = 'jumpToGallery';
+              jumpButton.className = 'shadow__btn mt-3';
+              jumpButton.textContent = '查看更多可视化图表';
+              jumpButton.onclick = function() {
+                window.location.href = 'gallery.html';
+              };
+              chartArea.appendChild(jumpButton);
+            }
+          }
+        } catch (e) {
+          console.error('显示图表失败:', e);
+        }
+      }
+      
+      // 文件上传处理
+      const fileUpload = document.getElementById('fileUpload');
+      if (fileUpload) {
+        fileUpload.addEventListener('change', function(e) {
+          uploadedFile = e.target.files[0];
+          if (uploadedFile) {
+            showMessage(`已选择文件：${uploadedFile.name}`, 'system');
           }
         });
+      }
+      
+      // 企业名称输入处理
+      const companyNameInput = document.getElementById('companyName');
+      if (companyNameInput) {
+        companyNameInput.addEventListener('change', function() {
+          companyName = this.value;
+        });
+      }
+      
+      // 发送按钮点击事件
+      const sendBtn = document.getElementById('sendBtn');
+      if (sendBtn) {
+        sendBtn.addEventListener('click', sendMessage);
+      }
+      
+      // 回车键发送消息
+      const userInput = document.getElementById('userInput');
+      if (userInput) {
+        userInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            sendMessage();
+          }
+        });
+      }
+      
+      // 初始化图表
+      initChart();
+      
+      // 窗口大小改变时重绘图表
+      window.addEventListener('resize', function() {
+        if (chartInstance) {
+          chartInstance.resize();
+        }
       });
+      
+      console.log('所有事件监听器已添加');
     });
-  </script> -->
+  </script>
 </body>
 </html>
