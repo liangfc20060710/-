@@ -848,190 +848,304 @@
   
   <!-- 对话功能 -->
   <script>
-    // 确保DOM加载完成
+    // 全局变量
+    let uploadedFile = null;
+    let currentFilePath = null;
+    let companyName = '';
+    
+    // 图表实例
+    let barChart, pieChart, lineChart, radarChart;
+    
+    // 从本地存储加载聊天数据
+    function loadChatData() {
+      try {
+        const chatData = JSON.parse(localStorage.getItem('chatData') || '[]');
+        return chatData;
+      } catch (e) {
+        console.error('加载聊天数据失败:', e);
+        return [];
+      }
+    }
+    
+    // 保存聊天数据到本地存储
+    function saveChatData(message, sender, data) {
+      try {
+        const chatData = JSON.parse(localStorage.getItem('chatData') || '[]');
+        chatData.push({
+          message,
+          sender,
+          timestamp: new Date().getTime(),
+          data
+        });
+        if (chatData.length > 50) {
+          chatData.splice(0, chatData.length - 50);
+        }
+        localStorage.setItem('chatData', JSON.stringify(chatData));
+      } catch (e) {
+        console.error('保存聊天数据失败:', e);
+      }
+    }
+    
+    // 显示消息
+    function showMessage(message, sender, data) {
+      try {
+        const chatArea = document.getElementById('chatArea');
+        if (!chatArea) {
+          console.error('chatArea元素不存在');
+          return;
+        }
+        
+        const messageClass = sender === 'user' ? 'user-message' : 'system-message';
+        
+        const messageElement = document.createElement('div');
+        messageElement.className = `chat-message ${messageClass}`;
+        messageElement.innerHTML = `<p>${message}</p>`;
+        
+        chatArea.appendChild(messageElement);
+        chatArea.scrollTop = chatArea.scrollHeight;
+        
+        saveChatData(message, sender, data);
+      } catch (e) {
+        console.error('显示消息失败:', e);
+      }
+    }
+    
+    // 显示加载状态
+    function showLoading() {
+      try {
+        const chatArea = document.getElementById('chatArea');
+        if (!chatArea) return;
+        
+        const loadingElement = document.createElement('div');
+        loadingElement.className = 'chat-message system-message';
+        loadingElement.id = 'loadingIndicator';
+        loadingElement.innerHTML = '<p class="loading-text">正在分析中...</p>';
+        
+        chatArea.appendChild(loadingElement);
+        chatArea.scrollTop = chatArea.scrollHeight;
+      } catch (e) {
+        console.error('显示加载状态失败:', e);
+      }
+    }
+    
+    // 移除加载状态
+    function removeLoading() {
+      const loadingIndicator = document.getElementById('loadingIndicator');
+      if (loadingIndicator) {
+        loadingIndicator.remove();
+      }
+    }
+    
+    // 根据问题检测需要的图表类型
+    function detectChartType(question) {
+      const q = question.toLowerCase();
+      if (q.includes('占比') || q.includes('比例') || q.includes('分配') || q.includes('构成')) {
+        return 'pie';
+      } else if (q.includes('趋势') || q.includes('变化') || q.includes('增长') || q.includes('时间')) {
+        return 'line';
+      } else if (q.includes('比较') || q.includes('对比') || q.includes('排名') || q.includes('结构')) {
+        return 'bar';
+      } else if (q.includes('雷达') || q.includes('综合') || q.includes('多维度')) {
+        return 'radar';
+      }
+      return 'bar';
+    }
+    
+    // 更新指定图表
+    function updateChart(chartType, chartData) {
+      try {
+        if (chartType === 'pie' && pieChart) {
+          const pieData = [];
+          for (const [key, values] of Object.entries(chartData.data)) {
+            if (Array.isArray(values) && values.length > 0) {
+              values.forEach((v, i) => {
+                if (!pieData[i]) pieData[i] = { name: chartData.labels?.[i] || key, value: 0 };
+                pieData[i].value += Number(v);
+              });
+            }
+          }
+          pieChart.setOption({
+            series: [{
+              data: pieData.slice(0, 6)
+            }]
+          });
+        } else if (chartType === 'line' && lineChart) {
+          const seriesData = [];
+          for (const [key, values] of Object.entries(chartData.data)) {
+            if (Array.isArray(values)) {
+              seriesData.push({
+                name: key,
+                data: values
+              });
+            }
+          }
+          lineChart.setOption({
+            xAxis: {
+              data: chartData.labels || []
+            },
+            series: seriesData
+          });
+        } else if (chartType === 'bar' && barChart) {
+          const seriesData = [];
+          for (const [key, values] of Object.entries(chartData.data)) {
+            if (Array.isArray(values)) {
+              seriesData.push({
+                name: key,
+                data: values
+              });
+            }
+          }
+          barChart.setOption({
+            xAxis: {
+              data: chartData.labels || []
+            },
+            series: seriesData
+          });
+        } else if (chartType === 'radar' && radarChart) {
+          radarChart.setOption({
+            series: [{
+              data: [{
+                value: Object.values(chartData.data).filter(v => Array.isArray(v))[0] || []
+              }]
+            }]
+          });
+        }
+      } catch (e) {
+        console.error('更新图表失败:', e);
+      }
+    }
+    
+    // 请求图表数据
+    async function requestChartData(question) {
+      if (!currentFilePath) return;
+      
+      try {
+        const formData = new FormData();
+        formData.append('message', question);
+        formData.append('file_path', currentFilePath);
+        
+        const response = await fetch('/api/chart_data', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const result = await response.json();
+        if (result.code === 200 && result.data) {
+          updateChart(result.data.chart_type, result.data.data);
+        }
+      } catch (e) {
+        console.error('请求图表数据失败:', e);
+      }
+    }
+    
+    // 发送消息
+    async function sendMessage() {
+      try {
+        const userInput = document.getElementById('userInput').value.trim();
+        if (!userInput && !uploadedFile) return;
+        
+        if (userInput) {
+          showMessage(userInput, 'user', { type: 'user_input', content: userInput });
+          document.getElementById('userInput').value = '';
+        }
+        
+        showLoading();
+        
+        const formData = new FormData();
+        if (uploadedFile) {
+          formData.append('file', uploadedFile);
+        }
+        if (companyName) {
+          formData.append('company_name', companyName);
+        }
+        if (userInput) {
+          formData.append('message', userInput);
+        }
+        
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/analyze', true);
+        
+        xhr.onload = function() {
+          removeLoading();
+          if (xhr.status === 200) {
+            try {
+              const res = JSON.parse(xhr.responseText);
+              if (res.code === 200 && res.data) {
+                const data = res.data;
+                let responseMessage = `
+                  <strong>企业名称：</strong>${data.company_name}<br>
+                  <strong>企业健康评分：</strong>${data.health_score || '暂无'}<br>
+                  <strong>风险预警：</strong>${data.risk_warning || '暂无'}<br>
+                  <strong>分析结果：</strong>${data.analysis_result}
+                `;
+                showMessage(responseMessage, 'system', { type: 'analysis_result', data: data });
+                
+                // 如果有文件且用户询问了图表相关问题，更新图表
+                if (uploadedFile && userInput) {
+                  requestChartData(userInput);
+                }
+              } else {
+                showMessage(res.msg || '分析失败，请重试', 'system');
+              }
+            } catch (e) {
+              console.error('解析响应失败:', e);
+              showMessage('分析失败，请重试！', 'system');
+            }
+          } else {
+            showMessage('分析失败，请重试！', 'system');
+          }
+        };
+        
+        xhr.onerror = function() {
+          removeLoading();
+          showMessage('网络错误，请重试！', 'system');
+        };
+        
+        xhr.send(formData);
+      } catch (e) {
+        removeLoading();
+        console.error('发送消息失败:', e);
+        showMessage('发送失败，请重试！', 'system');
+      }
+    }
+    
+    // 快捷问题
+    window.sendQuickQuestion = function(question) {
+      document.getElementById('userInput').value = question;
+      sendMessage();
+    };
+    
+    // 清空聊天内容
+    window.clearChat = function() {
+      const chatArea = document.getElementById('chatArea');
+      if (chatArea) {
+        chatArea.innerHTML = '';
+      }
+      localStorage.removeItem('chatData');
+      setTimeout(function() {
+        showMessage('欢迎使用企业数字大脑智能分析助手！我可以帮您分析财务数据、解读图表信息、提供决策建议。请问您需要了解哪方面的财务分析？', 'system', { type: 'welcome' });
+      }, 100);
+    };
+    
+    // 页面加载完成后初始化
     document.addEventListener('DOMContentLoaded', function() {
       console.log('DOM加载完成');
       
-      // 全局变量
-      let uploadedFile = null;
-      
-      // 从本地存储加载聊天数据
-      function loadChatData() {
-        try {
-          const chatData = JSON.parse(localStorage.getItem('chatData') || '[]');
-          return chatData;
-        } catch (e) {
-          console.error('加载聊天数据失败:', e);
-          return [];
-        }
-      }
-      
-      // 从本地存储加载图表数据
-      function loadChartData() {
-        try {
-          const chartData = JSON.parse(localStorage.getItem('chartData') || 'null');
-          return chartData;
-        } catch (e) {
-          console.error('加载图表数据失败:', e);
-          return null;
-        }
-      }
-      
-      // 保存聊天数据到本地存储
-      function saveChatData(message, sender, data) {
-        try {
-          const chatData = JSON.parse(localStorage.getItem('chatData') || '[]');
-          chatData.push({
-            message,
-            sender,
-            timestamp: new Date().getTime(),
-            data
-          });
-          // 只保留最近50条消息
-          if (chatData.length > 50) {
-            chatData.splice(0, chatData.length - 50);
-          }
-          localStorage.setItem('chatData', JSON.stringify(chatData));
-        } catch (e) {
-          console.error('保存聊天数据失败:', e);
-        }
-      }
-      
-      // 显示消息
-      function showMessage(message, sender, data) {
-        try {
-          const chatArea = document.getElementById('chatArea');
-          if (!chatArea) {
-            console.error('chatArea元素不存在');
-            return;
-          }
-          
-          const messageClass = sender === 'user' ? 'user-message' : 'system-message';
-          
-          const messageElement = document.createElement('div');
-          messageElement.className = `chat-message ${messageClass}`;
-          messageElement.innerHTML = `<p>${message}</p>`;
-          
-          chatArea.appendChild(messageElement);
-          chatArea.scrollTop = chatArea.scrollHeight;
-          console.log('消息已添加到聊天区域');
-          
-          // 保存聊天数据到本地存储
-          saveChatData(message, sender, data);
-        } catch (e) {
-          console.error('显示消息失败:', e);
-        }
-      }
-      
-      // 显示加载状态
-      function showLoading() {
-        try {
-          const chatArea = document.getElementById('chatArea');
-          if (!chatArea) {
-            console.error('chatArea元素不存在');
-            return;
-          }
-          
-          const loadingElement = document.createElement('div');
-          loadingElement.className = 'chat-message system-message';
-          loadingElement.innerHTML = '<p class="loading-text">正在分析中...</p>';
-          
-          chatArea.appendChild(loadingElement);
-          chatArea.scrollTop = chatArea.scrollHeight;
-          console.log('加载状态已显示');
-        } catch (e) {
-          console.error('显示加载状态失败:', e);
-        }
-      }
-      
-      // 移除加载状态
-      function removeLoading() {
-        try {
-          const loadingMessages = document.querySelectorAll('.chat-message.system-message:last-child');
-          loadingMessages.forEach(function(element) {
-            if (element.querySelector('.loading-text')) {
-              element.remove();
-            }
-          });
-          console.log('加载状态已移除');
-        } catch (e) {
-          console.error('移除加载状态失败:', e);
-        }
-      }
-      
-      // 更新图表数据
-      function updateChartData() {
-        try {
-          const chartData = loadChartData();
-          if (chartData) {
-            console.log('更新图表数据:', chartData);
-            // 这里可以根据需要更新各个图表
-            // 例如更新财务趋势图表
-            if (chartData.type === 'financial' && chartData.data) {
-              // 可以在这里更新对应的图表
-            }
-          }
-        } catch (e) {
-          console.error('更新图表数据失败:', e);
-        }
-      }
-      
-      // 发送消息
-      function sendMessage() {
-        try {
-          const userInput = document.getElementById('userInput').value.trim();
-          if (!userInput && !uploadedFile) return;
-          
-          // 显示用户消息
-          if (userInput) {
-            showMessage(userInput, 'user', { type: 'user_input', content: userInput });
-            document.getElementById('userInput').value = '';
-          }
-          
-          // 显示加载状态
-          showLoading();
-          
-          // 准备表单数据
-          const formData = new FormData();
-          if (uploadedFile) {
-            formData.append('file', uploadedFile);
-          }
-          if (userInput) {
-            formData.append('message', userInput);
-          }
-          
-          // 模拟后端响应
-          setTimeout(function() {
-            removeLoading();
-            
-            // 根据用户输入生成响应
-            let responseMessage = '';
-            if (userInput.includes('成本结构')) {
-              responseMessage = '根据成本分析图表，原材料成本占比最高，达到120万元，建议优化原材料采购策略，降低采购成本。';
-            } else if (userInput.includes('资产结构')) {
-              responseMessage = '资产结构分析显示，流动资产占比45%，固定资产占比25%，无形资产占比15%，其他资产占比15%。资产结构较为合理，建议适当增加无形资产投资。';
-            } else if (userInput.includes('财务趋势')) {
-              responseMessage = '财务趋势分析显示，收入和利润都呈现上升趋势，特别是3月和6月增长明显。建议继续保持当前的经营策略，同时注意控制成本。';
-            } else if (userInput.includes('企业健康')) {
-              responseMessage = '企业健康评估显示，盈利能力和运营能力表现优秀，偿债能力和成长能力良好，现金流一般。建议加强现金流管理，提高资金使用效率。';
-            } else {
-              responseMessage = '感谢您的提问。我是企业数字大脑的智能分析助手，可以帮您分析财务数据、解读图表信息、提供决策建议。请问您需要了解哪方面的财务分析？';
-            }
-            
-            showMessage(responseMessage, 'system', { type: 'analysis_result', message: responseMessage });
-          }, 1000);
-        } catch (e) {
-          removeLoading();
-          console.error('发送消息失败:', e);
-          showMessage('分析失败，请重试！', 'system', { type: 'error', message: '发送失败' });
-        }
-      }
-      
-      // 快捷问题
-      window.sendQuickQuestion = function(question) {
-        document.getElementById('userInput').value = question;
-        sendMessage();
-      };
+      // 初始化图表实例
+      setTimeout(function() {
+        const barDom = document.getElementById('chengben');
+        const pieDom = document.getElementById('bingtu');
+        const lineDom = document.getElementById('trendChart');
+        const radarDom = document.getElementById('radarChart');
+        
+        if (barDom) barChart = echarts.init(barDom);
+        if (pieDom) pieChart = echarts.init(pieDom);
+        if (lineDom) lineChart = echarts.init(lineDom);
+        if (radarDom) radarChart = echarts.init(radarDom);
+        
+        // 初始化随机数据图表
+        initRandomCharts();
+      }, 100);
       
       // 文件上传处理
       const fileUpload = document.getElementById('fileUpload');
@@ -1039,18 +1153,46 @@
         fileUpload.addEventListener('change', function(e) {
           uploadedFile = e.target.files[0];
           if (uploadedFile) {
-            showMessage(`已选择文件：${uploadedFile.name}`, 'system', { type: 'file_upload', filename: uploadedFile.name });
+            showMessage(`已选择文件：${uploadedFile.name}，正在上传分析...`, 'system', { type: 'file_upload', filename: uploadedFile.name });
+            
+            // 上传文件获取文件路径
+            const formData = new FormData();
+            formData.append('file', uploadedFile);
+            formData.append('message', '上传文件');
+            
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/api/analyze', true);
+            xhr.onload = function() {
+              if (xhr.status === 200) {
+                try {
+                  const res = JSON.parse(xhr.responseText);
+                  if (res.code === 200 && res.data && res.data.file_path) {
+                    currentFilePath = res.data.file_path;
+                    showMessage(`文件已上传成功：${uploadedFile.name}，可以开始提问了！`, 'system');
+                  }
+                } catch (e) {}
+              }
+            };
+            xhr.send(formData);
           }
         });
       }
       
-      // 发送按钮点击事件
+      // 企业名称输入
+      const companyNameInput = document.getElementById('companyName');
+      if (companyNameInput) {
+        companyNameInput.addEventListener('input', function() {
+          companyName = this.value;
+        });
+      }
+      
+      // 发送按钮
       const sendBtn = document.getElementById('sendBtn');
       if (sendBtn) {
         sendBtn.addEventListener('click', sendMessage);
       }
       
-      // 回车键发送消息
+      // 回车发送
       const userInput = document.getElementById('userInput');
       if (userInput) {
         userInput.addEventListener('keypress', function(e) {
@@ -1060,55 +1202,103 @@
         });
       }
       
-      // 加载历史聊天数据
-      function loadHistoryChatData() {
-        const chatData = loadChatData();
-        if (chatData.length > 0) {
-          // 清空聊天区域
-          const chatArea = document.getElementById('chatArea');
-          if (chatArea) {
-            chatArea.innerHTML = '';
-          }
-          // 显示历史消息
-          chatData.forEach(function(item) {
-            showMessage(item.message, item.sender, item.data);
-          });
-        } else {
-          // 显示欢迎消息
-          showMessage('欢迎使用企业数字大脑智能分析助手！我可以帮您分析财务数据、解读图表信息、提供决策建议。请问您需要了解哪方面的财务分析？', 'system', { type: 'welcome' });
-        }
+      // 加载历史记录
+      const chatData = loadChatData();
+      const chatArea = document.getElementById('chatArea');
+      if (chatData.length > 0 && chatArea) {
+        chatArea.innerHTML = '';
+        chatData.forEach(function(item) {
+          showMessage(item.message, item.sender, item.data);
+        });
+      } else if (chatArea) {
+        showMessage('欢迎使用企业数字大脑智能分析助手！我可以帮您分析财务数据、解读图表信息、提供决策建议。请上传Excel文件以获取更准确的分析。', 'system', { type: 'welcome' });
       }
-      
-      // 页面加载完成后加载历史数据并更新图表
-      setTimeout(function() {
-        loadHistoryChatData();
-        updateChartData();
-      }, 500);
-      
-      console.log('所有事件监听器已添加');
     });
     
-    // 清空聊天内容
-    function clearChat() {
-      try {
-        // 清空聊天区域
-        const chatArea = document.getElementById('chatArea');
-        if (chatArea) {
-          chatArea.innerHTML = '';
-        }
-        
-        // 清空本地存储
-        localStorage.removeItem('chatData');
-        
-        // 显示欢迎消息
-        setTimeout(function() {
-          showMessage('欢迎使用企业数字大脑智能分析助手！我可以帮您分析财务数据、解读图表信息、提供决策建议。请问您需要了解哪方面的财务分析？', 'system', { type: 'welcome' });
-        }, 100);
-        
-        console.log('聊天内容已清空');
-      } catch (e) {
-        console.error('清空聊天内容失败:', e);
+    // 初始化随机数据的图表
+    function initRandomCharts() {
+      const randomData = generateRandomData();
+      
+      // 柱状图
+      if (barChart) {
+        barChart.setOption({
+          tooltip: { trigger: 'axis' },
+          xAxis: { type: 'category', data: ['原材料', '人工', '制造', '管理', '销售'], axisLabel: { color: '#fff' } },
+          yAxis: { type: 'value', axisLabel: { color: '#fff', formatter: v => (v/10000).toFixed(0) + '万' } },
+          series: [{ data: randomData.cost, type: 'bar', itemStyle: { color: new echarts.graphic.LinearGradient(0,0,0,1, [{offset:0,color:'#3B82F6'},{offset:1,color:'#9333EA'}]) } }]
+        });
       }
+      
+      // 饼图
+      if (pieChart) {
+        pieChart.setOption({
+          tooltip: { trigger: 'item', formatter: p => `${p.name}: ${p.value.toLocaleString()}元 (${p.percent}%)` },
+          legend: { bottom: 10, textStyle: { color: '#fff' } },
+          series: [{ radius: ['40%','70%'], center: ['50%','40%'], type: 'pie', data: randomData.asset }]
+        });
+      }
+      
+      // 折线图
+      if (lineChart) {
+        lineChart.setOption({
+          tooltip: { trigger: 'axis' },
+          legend: { data: ['收入','利润'], top: 10, textStyle: { color: '#fff' } },
+          xAxis: { type: 'category', data: randomData.months, axisLabel: { color: '#fff' } },
+          yAxis: { type: 'value', axisLabel: { color: '#fff', formatter: v => (v/10000).toFixed(0) + '万' } },
+          series: [
+            { name: '收入', type: 'line', data: randomData.revenue, itemStyle: { color: '#3B82F6' } },
+            { name: '利润', type: 'line', data: randomData.profit, itemStyle: { color: '#9333EA' } }
+          ]
+        });
+      }
+      
+      // 雷达图
+      if (radarChart) {
+        radarChart.setOption({
+          tooltip: {},
+          radar: {
+            indicator: [
+              { name: '盈利能力', max: 100 },
+              { name: '偿债能力', max: 100 },
+              { name: '运营能力', max: 100 },
+              { name: '成长能力', max: 100 },
+              { name: '现金流', max: 100 }
+            ],
+            radius: '60%',
+            center: ['50%','50%'],
+            axisName: { color: '#fff' }
+          },
+          series: [{
+            type: 'radar',
+            data: [{ name: '企业健康指数', value: randomData.health, areaStyle: { color: 'rgba(147,51,234,0.3)' }, lineStyle: { color: '#9333EA' } }]
+          }]
+        });
+      }
+      
+      // 响应式
+      window.addEventListener('resize', function() {
+        barChart?.resize();
+        pieChart?.resize();
+        lineChart?.resize();
+        radarChart?.resize();
+      });
+    }
+    
+    // 生成随机数据
+    function generateRandomData() {
+      const months = ['1月','2月','3月','4月','5月','6月'];
+      const cost = [120, 95, 108, 132, 98, 115].map(v => v * 10000);
+      const revenue = months.map(() => Math.floor(Math.random() * 2000000) + 500000);
+      const profit = revenue.map(v => Math.floor(v * (Math.random() * 0.15 + 0.15)));
+      const asset = [
+        { value: Math.floor(Math.random() * 3000000) + 3000000, name: '流动资产' },
+        { value: Math.floor(Math.random() * 2000000) + 1500000, name: '固定资产' },
+        { value: Math.floor(Math.random() * 1500000) + 1000000, name: '无形资产' },
+        { value: Math.floor(Math.random() * 1000000) + 500000, name: '其他资产' }
+      ];
+      const health = [85, 78, 92, 68, 75, 88];
+      
+      return { months, cost, revenue, profit, asset, health };
     }
   </script>
 

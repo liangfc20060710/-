@@ -86,43 +86,64 @@ def analyze_excel():
 
                 health_score = 90
                 risk_warning = "无重大风险"
+                stored_file_path = file_path
             else:
-                # 读取Excel文件
-                df = pd.read_excel(file)
-                # 打印Excel内容（或者可以在这里处理数据）
+                # 处理文件
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
+                stored_file_path = file_path
+                
+                # 重新打开文件进行读取
+                df = pd.read_excel(file_path)
                 print(df.head())  # 显示前几行
+                
+                # 使用PDF处理器分析Excel文件（通过通用文档分析方法）
+                if user_message:
+                    # 将DataFrame转换为文本进行分析
+                    excel_content = df.to_string()
+                    analysis_result = processor.analyze_document(file_path, user_message, file_type="excel")
+                else:
+                    analysis_result = "文件已成功上传，请提出具体问题以获取分析结果。"
 
-                # 生成分析结果
-                analysis_result = "根据Excel文件分析，企业财务状况良好，各项指标均在合理范围内。"
                 health_score = 92
                 risk_warning = "无重大风险"
 
         except Exception as e:
             return jsonify({"code": 500, "msg": f"分析失败：{str(e)}"}), 500
     else:
-        # 纯消息分析
+        # 纯消息分析（智能对话）
         try:
             # 生成模拟财务数据用于可视化
             financial_data = generate_financial_data()
 
-            # 根据用户消息生成分析结果
+            # 尝试使用处理器进行智能对话
             if user_message:
-                if '成本' in user_message:
-                    analysis_result = "成本分析显示，原材料成本占比最高，建议优化采购策略降低成本。"
-                    health_score = 88
-                    risk_warning = "成本控制存在一定风险"
-                elif '资产' in user_message:
-                    analysis_result = "资产结构分析显示，流动资产占比合理，固定资产投资适中。"
+                # 调用智能体进行对话
+                try:
+                    # 使用analyze_document方法进行智能对话
+                    analysis_result = processor.analyze_document("conversation", user_message, file_type="conversation")
                     health_score = 90
                     risk_warning = "无重大风险"
-                elif '利润' in user_message:
-                    analysis_result = "利润分析显示，净利润增长率为15%，高于行业平均水平。"
-                    health_score = 95
-                    risk_warning = "无重大风险"
-                else:
-                    analysis_result = "根据您的问题，我们分析了企业的整体财务状况，各项指标均表现良好。"
-                    health_score = 92
-                    risk_warning = "无重大风险"
+                except Exception as e:
+                    # 如果处理器调用失败，使用默认分析
+                    print(f"智能体对话失败: {e}")
+                    if '成本' in user_message:
+                        analysis_result = "成本分析显示，原材料成本占比最高，建议优化采购策略降低成本。"
+                        health_score = 88
+                        risk_warning = "成本控制存在一定风险"
+                    elif '资产' in user_message:
+                        analysis_result = "资产结构分析显示，流动资产占比合理，固定资产投资适中。"
+                        health_score = 90
+                        risk_warning = "无重大风险"
+                    elif '利润' in user_message:
+                        analysis_result = "利润分析显示，净利润增长率为15%，高于行业平均水平。"
+                        health_score = 95
+                        risk_warning = "无重大风险"
+                    else:
+                        analysis_result = "根据您的问题，我们分析了企业的整体财务状况，各项指标均表现良好。"
+                        health_score = 92
+                        risk_warning = "无重大风险"
             else:
                 analysis_result = "欢迎使用企业数字大脑智能分析助手，请上传文件或提出具体问题。"
                 health_score = 85
@@ -139,7 +160,8 @@ def analyze_excel():
             "analysis_result": analysis_result,
             "health_score": health_score,
             "risk_warning": risk_warning,
-            "financial_data": financial_data
+            "financial_data": financial_data,
+            "file_path": stored_file_path if 'stored_file_path' in dir() else None
         }
     })
 
@@ -171,6 +193,42 @@ def generate_financial_data():
         "revenue": revenue,
         "profit": profit
     }
+
+
+# 4. 图表数据API接口
+@app.route('/api/chart_data', methods=['POST'])
+def get_chart_data():
+    """根据用户问题和文件生成图表数据"""
+    try:
+        user_message = request.form.get('message', '')
+        file_path = request.form.get('file_path', '')
+        
+        if not file_path or not os.path.exists(file_path):
+            return jsonify({
+                "code": 400,
+                "msg": "文件路径无效或文件不存在"
+            }), 400
+        
+        # 调用处理器生成图表数据
+        chart_result = processor.generate_chart_data_from_question(file_path, user_message)
+        
+        if chart_result.get("code") == 200:
+            return jsonify({
+                "code": 200,
+                "msg": "成功获取图表数据",
+                "data": chart_result
+            })
+        else:
+            return jsonify({
+                "code": 500,
+                "msg": chart_result.get("message", "生成图表数据失败")
+            }), 500
+            
+    except Exception as e:
+        return jsonify({
+            "code": 500,
+            "msg": f"获取图表数据失败：{str(e)}"
+        }), 500
 
 
 #

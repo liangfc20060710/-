@@ -4,19 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>企业数字大脑 - 在线体验</title>
+  <title>在线体验 - 企业数字大脑</title>
 
-  <!-- 【重点】所有CSS路径全部改成Flask正确格式 -->
-<!--  <link href="{{ url_for('static', filename='css/css2.css') }}" rel="stylesheet">-->
-<!--  <link rel="shortcut icon" href="{{ url_for('static', filename='image/favicon.png') }}" type="image/x-icon">-->
-<!--  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">-->
-<!--  <link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}">-->
-<!--  <link rel="stylesheet" href="{{ url_for('static', filename='css/animate.min.css') }}">-->
-<!--  <link rel="stylesheet" href="{{ url_for('static', filename='css/venobox.min.css') }}">-->
-<!--  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">-->
-<!--  <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">-->
-
-    <link href="../static/css/css2.css" rel="stylesheet">
+  <link href="../static/css/css2.css" rel="stylesheet">
   <link rel="shortcut icon" href="./assets/image/favicon.png" type="image/x-icon">
   <link rel="stylesheet" href="../static/css/bootstrap.min.css">
   <link rel="stylesheet" href="../static/css/all.min.css">
@@ -25,21 +15,30 @@
   <link rel="stylesheet" href="../static/css/style.css">
   <link rel="stylesheet" href="../static/css/responsive.css">
 
-
   <style>
-    /* 全局样式和帮助中心完全一致 */
+    /* 全局赛博朋克风格配色 */
     :root {
       --cyber-purple: #9333EA;
       --cyber-blue: #3B82F6;
       --cyber-pink: #EC4899;
       --dark-bg: #0F0529;
+      --cyber-green: #10B981;
+      --cyber-yellow: #FBBF24;
     }
     body {
       background-color: var(--dark-bg) !important;
       color: #fff !important;
+      font-family: 'Arial', sans-serif;
     }
+    /* 导航栏样式 */
     .navbar-nav .nav-link {
       color: #fff !important;
+      transition: all 0.3s ease;
+    }
+    .navbar-nav .nav-link:hover {
+      background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple)) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
     }
     .navbar-nav .nav-link.active {
       background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple)) !important;
@@ -47,114 +46,129 @@
       -webkit-text-fill-color: transparent !important;
       font-weight: 600;
     }
+    /* Banner 标题渐变 */
     .banner-text h1 {
       background: linear-gradient(90deg, #fff, var(--cyber-blue));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      font-size: 3.5rem;
+      font-weight: 800;
+      text-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
     }
     .banner-text a.active {
       background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-
-    /* 卡片样式和帮助中心完全一致 */
-    .help-card {
+    /* 智能分析助手卡片 */
+    .chat-card {
       border: 2px solid;
-      border-image: linear-gradient(90deg, var(--cyber-blue), var(--cyber-pink)) 1 !important;
-      border-radius: 12px !important;
-      overflow: hidden;
+      border-image: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple)) 1;
+      border-radius: 20px;
       padding: 30px;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 15px 35px rgba(147, 51, 234, 0.25);
     }
-    .form-label {
-      color: #fff !important;
-      font-size: 16px;
-      font-weight: 500;
+    /* 聊天区域 */
+    #chatArea {
+      height: 400px;
+      overflow-y: auto;
+      margin-bottom: 25px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    /* 聊天消息 */
+    .chat-message {
+      margin-bottom: 15px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      max-width: 80%;
+      animation: messageFadeIn 0.5s ease;
+    }
+    .user-message {
+      margin-left: auto;
+      background: rgba(147, 51, 234, 0.2);
+      text-align: right;
+      border: 1px solid rgba(147, 51, 234, 0.4);
+    }
+    .system-message {
+      margin-right: auto;
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+    }
+    /* 消息动画 */
+    @keyframes messageFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    /* 输入区域 */
+    .input-group {
+      gap: 12px;
     }
     .form-control {
-      background: rgba(255,255,255,0.1) !important;
-      border: 1px solid var(--cyber-blue) !important;
-      color: #fff !important;
-      padding: 10px 15px;
-      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--cyber-blue);
+      color: #fff;
+      padding: 14px 15px;
+      border-radius: 8px;
     }
-    .form-text {
-      color: rgba(255,255,255,0.6) !important;
+    .form-control:focus {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--cyber-purple);
+      box-shadow: 0 0 0 0.2rem rgba(147, 51, 234, 0.25);
     }
-
-    /* 按钮样式完全统一 */
+    /* 按钮样式 */
     .shadow__btn {
-      background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple)) !important;
-      border: none !important;
-      color: #fff !important;
-      padding: 12px 20px;
+      background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple));
+      border: none;
+      color: #fff;
+      padding: 12px 28px;
       font-weight: 600;
-      border-radius: 6px;
+      font-size: 1rem;
+      border-radius: 8px;
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
     }
     .shadow__btn:hover {
-      background: linear-gradient(90deg, var(--cyber-purple), var(--cyber-pink)) !important;
-      color: #fff !important;
+      background: linear-gradient(90deg, var(--cyber-purple), var(--cyber-pink));
       transform: translateY(-2px);
       box-shadow: 0 5px 15px rgba(147, 51, 234, 0.4);
     }
-    .shadow__btn:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 5px rgba(147, 51, 234, 0.3);
-    }
-    .shadow__btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-    /* 按钮点击波纹效果 */
-    .shadow__btn::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 5px;
-      height: 5px;
-      background: rgba(255, 255, 255, 0.5);
-      opacity: 0;
-      border-radius: 100%;
-      transform: scale(1, 1) translate(-50%, -50%);
-      transform-origin: 50% 50%;
-    }
-    .shadow__btn:focus:not(:active)::after {
-      animation: ripple 1s ease-out;
-    }
-    @keyframes ripple {
-      0% {
-        transform: scale(0, 0);
-        opacity: 0.5;
-      }
-      100% {
-        transform: scale(20, 20);
-        opacity: 0;
-      }
-    }
-
-    /* 分析结果展示区 */
-    #resultArea {
-      display: none;
-      margin-top: 30px;
-    }
-    .result-card {
-      border: 2px solid;
-      border-image: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple)) 1 !important;
-      border-radius: 12px;
-      padding: 25px;
-      background: rgba(255,255,255,0.05);
-    }
-    .loading-text {
-      text-align: center;
+    /* 快捷问题按钮 */
+    .quick-question-btn {
+      border-color: var(--cyber-blue);
       color: var(--cyber-blue);
-      font-size: 18px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+    .quick-question-btn:hover {
+      background: var(--cyber-blue);
+      color: #fff;
+    }
+    /* 页脚 */
+    .footer-section {
+      background: rgba(0, 0, 0, 0.3);
+      margin-top: 100px;
+    }
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+      .banner-text h1 {
+        font-size: 2.5rem;
+      }
+      #chatArea {
+        height: 350px;
+      }
     }
   </style>
 </head>
@@ -164,9 +178,7 @@
   <!-- 导航栏 -->
   <nav class="navbar navbar-expand-md main-menu">
     <div class="container">
-      <a class="navbar-brand" href="/">
-        <img src="../static/picture/logo-10.png" alt="">
-      </a>
+      <a class="navbar-brand" href="index.html"><img src="../static/picture/logo-10.png" alt=""></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
         <i class="fas fa-bars"></i>
       </button>
@@ -220,60 +232,78 @@
     </div>
   </div>
 
-  <!-- Banner 【重点】背景图路径改成正确的static路径 -->
-  <section id="banner" class="cmn-banner" style="background: url(../static/image/banner.jpg) no-repeat center/cover;">
+  <!-- Banner -->
+  <section id="banner" class="cmn-banner" style="background: url(static/image/banner.jpg) no-repeat center/cover;">
     <div class="container">
       <div class="row">
         <div class="col-md-12">
           <div class="wow animate__animated animate__fadeInLeft banner-text">
             <h1>在线体验</h1>
-            <a href="../templates/index.html">首页 |</a> <a class="active" href="../templates/experience.html"> 在线体验</a>
+            <a href="index.html">首页 |</a> <a class="active" href="experience.html"> 在线体验</a>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 对话界面区域 -->
-  <section id="gallery">
+  <!-- 主要内容 -->
+  <section id="experience" style="padding: 80px 0; background: linear-gradient(135deg, rgba(15, 5, 41, 0.9), rgba(15, 5, 41, 0.95));">
     <div class="container">
+      <div class="row mb-10">
+        <div class="col-md-12 text-center">
+          <h2 style="background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));-webkit-background-clip: text;-webkit-text-fill-color: transparent; margin-bottom: 20px; font-size: 3rem; font-weight: 700;">
+            智能对话助手
+          </h2>
+          <p class="text-white-50 mb-6" style="font-size: 1.2rem; max-width: 800px; margin: 0 auto;">上传文件并与智能助手对话，获取企业财务分析和决策建议</p>
+        </div>
+      </div>
+      
       <div class="row justify-content-center">
-        <div class="wow animate__animated animate__fadeInUp col-lg-8">
-          <div class="help-card">
-            <h3 style="background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));-webkit-background-clip: text;-webkit-text-fill-color: transparent; margin-bottom: 20px;">
-              智能对话助手
+        <div class="col-lg-8">
+          <div class="chat-card">
+            <h3 style="background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));-webkit-background-clip: text;-webkit-text-fill-color: transparent; margin-bottom: 25px; font-size: 1.5rem; font-weight: 600;">
+              智能分析助手
             </h3>
             
-            <!-- 对话消息展示区 -->
-            <div id="chatArea" style="height: 400px; overflow-y: auto; margin-bottom: 20px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px;">
-              <!-- 欢迎消息将通过JavaScript动态添加 -->
+            <!-- 聊天区域 -->
+            <div class="chat-area" id="chatArea">
+              <!-- 消息将在这里显示 -->
             </div>
             
-            <!-- 文件上传区域 -->
-            <div class="mb-4">
-              <label class="form-label">上传文件</label>
-              <input type="file" class="form-control" id="fileUpload" name="file">
-              <div class="form-text">支持各种格式的文件，系统会自动分析文件内容</div>
-            </div>
-            
-            <!-- 企业名称输入 -->
-            <div class="mb-4">
-              <label class="form-label">企业名称</label>
-              <input type="text" class="form-control" id="companyName" name="company_name" placeholder="请输入企业名称">
-            </div>
-            
-            <!-- 用户输入区域 -->
-            <div class="input-group">
-              <input type="text" class="form-control" id="userInput" placeholder="输入您的问题...">
-              <button class="shadow__btn" id="sendBtn">发送</button>
-            </div>
-            
-            <!-- 数据可视化区域 -->
-            <div id="chartArea" style="margin-top: 30px; display: none;">
-              <h4 style="background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple));-webkit-background-clip: text;-webkit-text-fill-color: transparent; margin-bottom: 20px;">
-                数据可视化
-              </h4>
-              <div id="financialChart" style="width: 100%; height: 300px;"></div>
+            <!-- 文件上传和输入区域 -->
+            <div class="p-0">
+              <!-- 文件上传区域 -->
+              <div class="mb-5">
+                <label class="form-label" style="color: #fff; font-weight: 500; font-size: 1rem;">上传文件</label>
+                <input type="file" class="form-control" id="fileUpload" name="file">
+                <div class="form-text" style="color: rgba(255,255,255,0.6); margin-top: 8px;">支持各种格式的文件，系统会自动分析文件内容</div>
+              </div>
+              
+              <!-- 企业名称输入 -->
+              <div class="mb-5">
+                <label class="form-label" style="color: #fff; font-weight: 500; font-size: 1rem;">企业名称</label>
+                <input type="text" class="form-control" id="companyName" name="company_name" placeholder="请输入企业名称">
+              </div>
+              
+              <!-- 用户输入区域 -->
+              <div class="input-group">
+                <input type="text" class="form-control" id="userInput" placeholder="输入您的问题...例如：分析成本结构">
+                <button class="shadow__btn" id="sendBtn">发送</button>
+              </div>
+              
+              <!-- 快捷问题 -->
+              <div class="mt-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <p class="text-white-50 mb-0" style="font-weight: 500; font-size: 1rem;">快捷问题：</p>
+                  <button class="btn btn-sm btn-outline-danger" onclick="clearChat()" style="border-color: #EF4444; color: #EF4444; padding: 6px 12px; font-size: 0.85rem;">清空聊天</button>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                  <button class="btn btn-sm quick-question-btn" onclick="sendQuickQuestion('分析成本结构')">分析成本结构</button>
+                  <button class="btn btn-sm quick-question-btn" onclick="sendQuickQuestion('资产结构分析')">资产结构分析</button>
+                  <button class="btn btn-sm quick-question-btn" onclick="sendQuickQuestion('财务趋势分析')">财务趋势分析</button>
+                  <button class="btn btn-sm quick-question-btn" onclick="sendQuickQuestion('企业健康评估')">企业健康评估</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -288,9 +318,7 @@
         <div class="row">
           <div class="col-lg-4">
             <div class="footer-widget">
-              <a class="navbar-brand" href="/">
-                <img src="../static/picture/logo-10.png" alt="">
-              </a>
+              <a class="navbar-brand" href="#"><img src="../static/picture/logo-10.png" alt=""></a>
               <p class="mt-3">企业数字大脑 | 2026大数据主题赛参赛作品，多智能体驱动企业运营分析与决策支持。</p>
               <div class="social-icon d-flex">
                 <a href="#"><i class="fab fa-github"></i></a>
@@ -302,12 +330,12 @@
             <div class="footer-widget">
               <h3>快速导航</h3>
               <ul>
-                <li><a href="../templates/index.html">首页</a></li>
-                <li><a href="../templates/about.html">项目介绍</a></li>
-                <li><a href="../templates/service.html">核心功能</a></li>
-                <li><a href="../templates/gallery.html">数据可视化</a></li>
-                <li><a href="../templates/experience.html">在线体验</a></li>
-                <li><a href="../templates/help.html">帮助中心</a></li>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="about.html">项目介绍</a></li>
+                <li><a href="service.html">核心功能</a></li>
+                <li><a href="gallery.html">数据可视化</a></li>
+                <li><a href="experience.html">在线体验</a></li>
+                <li><a href="help.html">帮助中心</a></li>
               </ul>
             </div>
           </div>
@@ -318,7 +346,7 @@
               <div class="subscribe-form">
                 <form>
                   <input type="text" placeholder="输入邮箱地址">
-                  <button class="shadow__btn"><i class="fab fa-telegram-plane"></i></button>
+                  <button><i class="fab fa-telegram-plane"></i></button>
                 </form>
               </div>
             </div>
@@ -337,372 +365,241 @@
     </div>
   </footer>
 
-  <!-- 【重点】所有JS路径全部改成Flask正确格式 -->
   <script src="../static/js/jquery-1.12.4.min.js"></script>
   <script src="../static/js/bootstrap.min.js"></script>
   <script src="../static/js/wow.min.js"></script>
   <script src="../static/js/script.js"></script>
-
-  <!-- 引入ECharts库用于数据可视化 -->
-  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
-  
-  <!-- 核心对接接口的JS代码 -->
   <script>
-    // 确保DOM加载完成
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('DOM加载完成');
+    // 全局变量
+    let uploadedFile = null;
+    let currentFilePath = null;
+    let companyName = '';
+    
+    // 显示消息
+    function showMessage(message, sender) {
+      const chatArea = document.getElementById('chatArea');
+      if (!chatArea) return;
       
-      // 全局变量
-      let uploadedFile = null;
-      let companyName = '';
-      let chartInstance = null;
+      const messageClass = sender === 'user' ? 'user-message' : 'system-message';
       
-      // 初始化ECharts实例
-      function initChart() {
-        try {
-          chartInstance = echarts.init(document.getElementById('financialChart'));
-          console.log('ECharts初始化成功');
-        } catch (e) {
-          console.error('ECharts初始化失败:', e);
-        }
+      const messageElement = document.createElement('div');
+      messageElement.className = `chat-message ${messageClass}`;
+      messageElement.innerHTML = `<p>${message}</p>`;
+      
+      chatArea.appendChild(messageElement);
+      chatArea.scrollTop = chatArea.scrollHeight;
+    }
+    
+    // 显示加载状态
+    function showLoading() {
+      const chatArea = document.getElementById('chatArea');
+      if (!chatArea) return;
+      
+      const loadingElement = document.createElement('div');
+      loadingElement.className = 'chat-message system-message';
+      loadingElement.id = 'loadingIndicator';
+      loadingElement.innerHTML = '<p class="loading-text">正在分析中...</p>';
+      
+      chatArea.appendChild(loadingElement);
+      chatArea.scrollTop = chatArea.scrollHeight;
+    }
+    
+    // 移除加载状态
+    function removeLoading() {
+      const loadingIndicator = document.getElementById('loadingIndicator');
+      if (loadingIndicator) {
+        loadingIndicator.remove();
+      }
+    }
+    
+    // 请求图表数据
+    async function requestChartData(question) {
+      if (!currentFilePath) {
+        showMessage('提示：如需生成图表，请前往<a href="gallery.html">数据可视化页面</a>查看。', 'system');
+        return;
       }
       
-      // 显示消息
-      function showMessage(message, sender, data) {
-        try {
-          const chatArea = document.getElementById('chatArea');
-          if (!chatArea) {
-            console.error('chatArea元素不存在');
-            return;
-          }
-          
-          const messageClass = sender === 'user' ? 'user-message' : 'system-message';
-          const messageStyle = sender === 'user' ? 
-            'margin-left: auto; background: rgba(147, 51, 234, 0.2); text-align: right;' : 
-            'margin-right: auto; background: rgba(59, 130, 246, 0.2);';
-          
-          const messageElement = document.createElement('div');
-          messageElement.className = `chat-message ${messageClass}`;
-          messageElement.style = `margin-bottom: 15px; padding: 10px; ${messageStyle} border-radius: 8px; max-width: 80%; opacity: 0; transform: translateY(10px); transition: all 0.5s ease;`;
-          messageElement.innerHTML = `<p>${message}</p>`;
-          
-          chatArea.appendChild(messageElement);
-          // 触发重排
-          messageElement.offsetHeight;
-          // 添加动画效果
-          messageElement.style.opacity = '1';
-          messageElement.style.transform = 'translateY(0)';
-          chatArea.scrollTop = chatArea.scrollHeight;
-          console.log('消息已添加到聊天区域');
-          
-          // 保存聊天数据到本地存储
-          saveChatData(message, sender, data);
-        } catch (e) {
-          console.error('显示消息失败:', e);
+      try {
+        const formData = new FormData();
+        formData.append('message', question);
+        formData.append('file_path', currentFilePath);
+        
+        const response = await fetch('/api/chart_data', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const result = await response.json();
+        if (result.code === 200 && result.data) {
+          const chartType = result.data.chart_type;
+          showMessage(`已根据您的问题生成${chartType === 'pie' ? '饼图' : chartType === 'line' ? '折线图' : chartType === 'bar' ? '柱状图' : '雷达图'}数据，请前往<a href="gallery.html">数据可视化页面</a>查看。`, 'system');
+        } else {
+          showMessage('图表数据生成失败，请重试', 'system');
         }
+      } catch (e) {
+        console.error('请求图表数据失败:', e);
+        showMessage('图表数据生成失败，请重试', 'system');
       }
+    }
+    
+    // 发送消息
+    function sendMessage() {
+      const userInput = document.getElementById('userInput').value.trim();
+      if (!userInput && !uploadedFile) return;
       
-      // 页面加载完成后显示欢迎消息
-      console.log('准备显示欢迎消息');
-      setTimeout(function() {
-        console.log('显示欢迎消息');
-        showMessage('欢迎使用企业数字大脑智能助手！请上传文件开始分析，或直接提问关于企业财务的问题。', 'system');
-      }, 1000);
+      // 显示用户消息
+      if (userInput) {
+        showMessage(userInput, 'user');
+        document.getElementById('userInput').value = '';
+      }
       
       // 显示加载状态
-      function showLoading() {
-        try {
-          const chatArea = document.getElementById('chatArea');
-          if (!chatArea) {
-            console.error('chatArea元素不存在');
-            return;
-          }
-          
-          const loadingElement = document.createElement('div');
-          loadingElement.className = 'chat-message system-message loading-message';
-          loadingElement.style = 'margin-bottom: 15px; padding: 10px; background: rgba(59, 130, 246, 0.2); border-radius: 8px; max-width: 80%;';
-          loadingElement.innerHTML = '<p class="loading-text">正在分析中...</p>';
-          
-          chatArea.appendChild(loadingElement);
-          chatArea.scrollTop = chatArea.scrollHeight;
-          console.log('加载状态已显示');
-        } catch (e) {
-          console.error('显示加载状态失败:', e);
-        }
+      showLoading();
+      
+      // 准备表单数据
+      const formData = new FormData();
+      if (uploadedFile) {
+        formData.append('file', uploadedFile);
+      }
+      if (companyName) {
+        formData.append('company_name', companyName);
+      }
+      if (userInput) {
+        formData.append('message', userInput);
       }
       
-      // 移除加载状态
-      function removeLoading() {
-        try {
-          const loadingMessages = document.querySelectorAll('.loading-message');
-          loadingMessages.forEach(function(element) {
-            element.remove();
-          });
-          console.log('加载状态已移除');
-        } catch (e) {
-          console.error('移除加载状态失败:', e);
-        }
-      }
-      
-      // 发送消息
-      function sendMessage() {
-        try {
-          const userInput = document.getElementById('userInput').value.trim();
-          if (!userInput && !uploadedFile) return;
-          
-          // 显示用户消息
-          if (userInput) {
-            showMessage(userInput, 'user', { type: 'user_input', content: userInput });
-            document.getElementById('userInput').value = '';
+      // 调用后端接口
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/api/analyze', true);
+      xhr.onload = function() {
+        removeLoading();
+        if (xhr.status === 200) {
+          try {
+            const res = JSON.parse(xhr.responseText);
+            // 显示系统回复
+            if (res.code === 200) {
+              const data = res.data;
+              
+              // 保存文件路径供图表使用
+              if (data.file_path) {
+                currentFilePath = data.file_path;
+              }
+              
+              let responseMessage = `
+                  <strong>企业名称：</strong>${data.company_name}<br>
+                  <strong>企业健康评分：</strong>${data.health_score || '暂无'}<br>
+                  <strong>风险预警：</strong>${data.risk_warning || '暂无'}<br>
+                  <strong>分析结果：</strong>${data.analysis_result}
+              `;
+              showMessage(responseMessage, 'system');
+              
+              // 如果用户询问图表相关问题，提供提示
+              if (userInput && uploadedFile) {
+                const q = userInput.toLowerCase();
+                if (q.includes('图') || q.includes('占比') || q.includes('趋势') || q.includes('比较') || q.includes('结构')) {
+                  setTimeout(() => {
+                    requestChartData(userInput);
+                  }, 500);
+                }
+              }
+            } else if (res.message) {
+              showMessage(res.message, 'system');
+            } else {
+              showMessage(res.msg || '分析失败，请重试', 'system');
+            }
+          } catch (e) {
+            console.error('解析响应失败:', e);
+            showMessage('分析失败，请重试！', 'system');
           }
+        } else {
+          showMessage('分析失败，请重试！', 'system');
+          console.error('请求失败，状态码:', xhr.status);
+        }
+      };
+      xhr.onerror = function() {
+        removeLoading();
+        showMessage('分析失败，请重试！', 'system');
+        console.error('网络错误');
+      };
+      xhr.send(formData);
+    }
+    
+    // 快捷问题
+    window.sendQuickQuestion = function(question) {
+      document.getElementById('userInput').value = question;
+      sendMessage();
+    };
+    
+    // 清空聊天内容
+    window.clearChat = function() {
+      const chatArea = document.getElementById('chatArea');
+      if (chatArea) {
+        chatArea.innerHTML = '';
+        setTimeout(function() {
+          showMessage('欢迎使用企业数字大脑智能助手！请上传文件开始分析，或直接提问关于企业财务的问题。', 'system');
+        }, 100);
+      }
+    };
+    
+    // 页面加载完成后显示欢迎消息
+    setTimeout(function() {
+      showMessage('欢迎使用企业数字大脑智能助手！请上传文件开始分析，或直接提问关于企业财务的问题。支持生成柱状图、饼图、折线图、雷达图等可视化图表。', 'system');
+    }, 1000);
+    
+    // 文件上传处理
+    const fileUpload = document.getElementById('fileUpload');
+    if (fileUpload) {
+      fileUpload.addEventListener('change', function(e) {
+        uploadedFile = e.target.files[0];
+        if (uploadedFile) {
+          showMessage(`已选择文件：${uploadedFile.name}，正在上传分析...`, 'system');
           
-          // 显示加载状态
-          showLoading();
-          
-          // 准备表单数据
+          // 先上传文件获取文件路径
           const formData = new FormData();
-          if (uploadedFile) {
-            formData.append('file', uploadedFile);
-          }
-          if (companyName) {
-            formData.append('company_name', companyName);
-          }
-          if (userInput) {
-            formData.append('message', userInput);
-          }
+          formData.append('file', uploadedFile);
+          formData.append('message', '上传文件');
           
-          // 调用后端接口
           const xhr = new XMLHttpRequest();
           xhr.open('POST', '/api/analyze', true);
           xhr.onload = function() {
-            removeLoading();
             if (xhr.status === 200) {
               try {
                 const res = JSON.parse(xhr.responseText);
-                // 显示系统回复
-                if (res.code === 200) {
-                  const data = res.data;
-                  let responseMessage = `
-                    <strong>企业名称：</strong>${data.company_name}<br>
-                    <strong>企业健康评分：</strong>${data.health_score || '暂无'}<br>
-                    <strong>风险预警：</strong>${data.risk_warning || '暂无'}<br>
-                    <strong>分析结果：</strong>${data.analysis_result}
-                  `;
-                  showMessage(responseMessage, 'system', { type: 'analysis_result', data: data });
-                  
-                  // 显示数据可视化
-                  showChart(data);
-                } else if (res.message) {
-                  showMessage(res.message, 'system', { type: 'error', message: res.message });
-                } else {
-                  showMessage(res.msg || '分析失败，请重试', 'system', { type: 'error', message: res.msg });
+                if (res.code === 200 && res.data && res.data.file_path) {
+                  currentFilePath = res.data.file_path;
+                  showMessage(`文件已上传成功：${uploadedFile.name}，可以开始提问了！`, 'system');
                 }
-              } catch (e) {
-                console.error('解析响应失败:', e);
-                showMessage('分析失败，请重试！', 'system', { type: 'error', message: '解析响应失败' });
-              }
-            } else {
-              showMessage('分析失败，请重试！', 'system', { type: 'error', message: '请求失败' });
-              console.error('请求失败，状态码:', xhr.status);
+              } catch (e) {}
             }
-          };
-          xhr.onerror = function() {
-            removeLoading();
-            showMessage('分析失败，请重试！', 'system', { type: 'error', message: '网络错误' });
-            console.error('网络错误');
           };
           xhr.send(formData);
-        } catch (e) {
-          removeLoading();
-          console.error('发送消息失败:', e);
-          showMessage('分析失败，请重试！', 'system', { type: 'error', message: '发送失败' });
-        }
-      }
-      
-      // 保存聊天数据到本地存储
-      function saveChatData(message, sender, data) {
-        try {
-          const chatData = JSON.parse(localStorage.getItem('chatData') || '[]');
-          chatData.push({
-            message,
-            sender,
-            timestamp: new Date().getTime(),
-            data
-          });
-          // 只保留最近50条消息
-          if (chatData.length > 50) {
-            chatData.splice(0, chatData.length - 50);
-          }
-          localStorage.setItem('chatData', JSON.stringify(chatData));
-        } catch (e) {
-          console.error('保存聊天数据失败:', e);
-        }
-      }
-      
-      // 保存图表数据到本地存储
-      function saveChartData(chartData) {
-        try {
-          localStorage.setItem('chartData', JSON.stringify(chartData));
-        } catch (e) {
-          console.error('保存图表数据失败:', e);
-        }
-      }
-      
-      // 显示数据可视化图表
-      function showChart(data) {
-        try {
-          const chartArea = document.getElementById('chartArea');
-          if (chartArea) {
-            chartArea.style.display = 'block';
-          }
-          
-          // 从后端数据中获取财务数据
-          // 如果后端没有提供数据，显示空图表
-          const financialData = data.financial_data || {
-            categories: [],
-            revenue: [],
-            profit: []
-          };
-          
-          // 图表配置
-          const option = {
-            title: {
-              text: '企业财务趋势',
-              textStyle: {
-                color: '#fff'
-              }
-            },
-            tooltip: {
-              trigger: 'axis'
-            },
-            legend: {
-              data: ['收入', '利润'],
-              textStyle: {
-                color: '#fff'
-              }
-            },
-            grid: {
-              left: '3%',
-              right: '4%',
-              bottom: '3%',
-              containLabel: true
-            },
-            xAxis: {
-              type: 'category',
-              boundaryGap: false,
-              data: financialData.categories,
-              axisLabel: {
-                color: '#fff'
-              }
-            },
-            yAxis: {
-              type: 'value',
-              axisLabel: {
-                color: '#fff'
-              }
-            },
-            series: [
-              {
-                name: '收入',
-                type: 'line',
-                stack: 'Total',
-                data: financialData.revenue,
-                itemStyle: {
-                  color: '#3B82F6'
-                }
-              },
-              {
-                name: '利润',
-                type: 'line',
-                stack: 'Total',
-                data: financialData.profit,
-                itemStyle: {
-                  color: '#9333EA'
-                }
-              }
-            ]
-          };
-          
-          // 渲染图表
-          if (chartInstance) {
-            chartInstance.setOption(option);
-            console.log('图表已渲染');
-          }
-          
-          // 保存图表数据到本地存储
-          saveChartData({
-            type: 'financial',
-            data: financialData
-          });
-          
-          // 显示跳转到gallery页面的按钮
-          const chartArea = document.getElementById('chartArea');
-          if (chartArea) {
-            // 检查是否已存在跳转按钮
-            let jumpButton = document.getElementById('jumpToGallery');
-            if (!jumpButton) {
-              jumpButton = document.createElement('button');
-              jumpButton.id = 'jumpToGallery';
-              jumpButton.className = 'shadow__btn mt-3';
-              jumpButton.textContent = '查看更多可视化图表';
-              jumpButton.onclick = function() {
-                window.location.href = 'gallery.html';
-              };
-              chartArea.appendChild(jumpButton);
-            }
-          }
-        } catch (e) {
-          console.error('显示图表失败:', e);
-        }
-      }
-      
-      // 文件上传处理
-      const fileUpload = document.getElementById('fileUpload');
-      if (fileUpload) {
-        fileUpload.addEventListener('change', function(e) {
-          uploadedFile = e.target.files[0];
-          if (uploadedFile) {
-            showMessage(`已选择文件：${uploadedFile.name}`, 'system');
-          }
-        });
-      }
-      
-      // 企业名称输入处理
-      const companyNameInput = document.getElementById('companyName');
-      if (companyNameInput) {
-        companyNameInput.addEventListener('change', function() {
-          companyName = this.value;
-        });
-      }
-      
-      // 发送按钮点击事件
-      const sendBtn = document.getElementById('sendBtn');
-      if (sendBtn) {
-        sendBtn.addEventListener('click', sendMessage);
-      }
-      
-      // 回车键发送消息
-      const userInput = document.getElementById('userInput');
-      if (userInput) {
-        userInput.addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') {
-            sendMessage();
-          }
-        });
-      }
-      
-      // 初始化图表
-      initChart();
-      
-      // 窗口大小改变时重绘图表
-      window.addEventListener('resize', function() {
-        if (chartInstance) {
-          chartInstance.resize();
         }
       });
-      
-      console.log('所有事件监听器已添加');
-    });
+    }
+    
+    // 企业名称输入处理
+    const companyNameInput = document.getElementById('companyName');
+    if (companyNameInput) {
+      companyNameInput.addEventListener('input', function() {
+        companyName = this.value;
+      });
+    }
+    
+    // 发送按钮点击事件
+    const sendBtn = document.getElementById('sendBtn');
+    if (sendBtn) {
+      sendBtn.addEventListener('click', sendMessage);
+    }
+    
+    // 回车键发送消息
+    const userInput = document.getElementById('userInput');
+    if (userInput) {
+      userInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          sendMessage();
+        }
+      });
+    }
   </script>
 </body>
 </html>
