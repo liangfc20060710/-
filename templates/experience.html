@@ -295,7 +295,10 @@
               <div class="mt-5">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                   <p class="text-white-50 mb-0" style="font-weight: 500; font-size: 1rem;">快捷问题：</p>
-                  <button class="btn btn-sm btn-outline-danger" onclick="clearChat()" style="border-color: #EF4444; color: #EF4444; padding: 6px 12px; font-size: 0.85rem;">清空聊天</button>
+                  <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-outline-secondary" onclick="clearChat()" style="padding: 6px 12px; font-size: 0.85rem;">清空聊天</button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="endSession()" style="border-color: #EF4444; color: #EF4444; padding: 6px 12px; font-size: 0.85rem;">结束会话</button>
+                  </div>
                 </div>
                 <div class="d-flex flex-wrap gap-2">
                   <button class="btn btn-sm quick-question-btn" onclick="sendQuickQuestion('分析成本结构')">分析成本结构</button>
@@ -375,6 +378,64 @@
     let currentFilePath = null;
     let companyName = '';
     
+    // localStorage键名
+    const STORAGE_KEY = 'experience_chat_data';
+    const FILE_INFO_KEY = 'experience_file_info';
+    
+    // 加载聊天记录
+    function loadChatData() {
+      try {
+        const chatData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        return chatData;
+      } catch (e) {
+        console.error('加载聊天数据失败:', e);
+        return [];
+      }
+    }
+    
+    // 保存聊天数据
+    function saveChatData(message, sender) {
+      try {
+        const chatData = loadChatData();
+        chatData.push({
+          message: message,
+          sender: sender,
+          timestamp: new Date().getTime()
+        });
+        // 只保留最近100条消息
+        if (chatData.length > 100) {
+          chatData.splice(0, chatData.length - 100);
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(chatData));
+      } catch (e) {
+        console.error('保存聊天数据失败:', e);
+      }
+    }
+    
+    // 保存文件信息
+    function saveFileInfo(filename, filePath) {
+      try {
+        localStorage.setItem(FILE_INFO_KEY, JSON.stringify({
+          filename: filename,
+          filePath: filePath,
+          timestamp: new Date().getTime()
+        }));
+      } catch (e) {
+        console.error('保存文件信息失败:', e);
+      }
+    }
+    
+    // 加载文件信息
+    function loadFileInfo() {
+      try {
+        const info = JSON.parse(localStorage.getItem(FILE_INFO_KEY) || 'null');
+        return info;
+      } catch (e) {
+        console.error('加载文件信息失败:', e);
+        return null;
+      }
+    }
+    
     // 显示消息
     function showMessage(message, sender) {
       const chatArea = document.getElementById('chatArea');
@@ -388,6 +449,9 @@
       
       chatArea.appendChild(messageElement);
       chatArea.scrollTop = chatArea.scrollHeight;
+      
+      // 保存到localStorage
+      saveChatData(message, sender);
     }
     
     // 显示加载状态
@@ -530,21 +594,72 @@
       sendMessage();
     };
     
-    // 清空聊天内容
+    // 清空聊天内容（仅清空当前会话，保留文件信息）
     window.clearChat = function() {
       const chatArea = document.getElementById('chatArea');
       if (chatArea) {
         chatArea.innerHTML = '';
         setTimeout(function() {
-          showMessage('欢迎使用企业数字大脑智能助手！请上传文件开始分析，或直接提问关于企业财务的问题。', 'system');
+          showMessage('欢迎使用企业数字大脑智能助手！请上传文件开始分析，或直接提问关于企业财务的问题。支持生成柱状图、饼图、折线图、雷达图等可视化图表。', 'system');
         }, 100);
       }
     };
     
-    // 页面加载完成后显示欢迎消息
-    setTimeout(function() {
-      showMessage('欢迎使用企业数字大脑智能助手！请上传文件开始分析，或直接提问关于企业财务的问题。支持生成柱状图、饼图、折线图、雷达图等可视化图表。', 'system');
-    }, 1000);
+    // 结束会话（清空所有数据）
+    window.endSession = function() {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(FILE_INFO_KEY);
+      const chatArea = document.getElementById('chatArea');
+      if (chatArea) {
+        chatArea.innerHTML = '';
+      }
+      uploadedFile = null;
+      currentFilePath = null;
+      companyName = '';
+      document.getElementById('companyName').value = '';
+      document.getElementById('fileUpload').value = '';
+      setTimeout(function() {
+        showMessage('会话已结束，数据已清空。欢迎重新开始！', 'system');
+      }, 100);
+    };
+    
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      // 加载历史聊天记录
+      const chatData = loadChatData();
+      const chatArea = document.getElementById('chatArea');
+      
+      if (chatData.length > 0 && chatArea) {
+        chatArea.innerHTML = '';
+        chatData.forEach(function(item) {
+          const messageClass = item.sender === 'user' ? 'user-message' : 'system-message';
+          const messageElement = document.createElement('div');
+          messageElement.className = `chat-message ${messageClass}`;
+          messageElement.innerHTML = `<p>${item.message}</p>`;
+          chatArea.appendChild(messageElement);
+        });
+        chatArea.scrollTop = chatArea.scrollHeight;
+      } else {
+        // 显示欢迎消息
+        setTimeout(function() {
+          showMessage('欢迎使用企业数字大脑智能助手！请上传文件开始分析，或直接提问关于企业财务的问题。支持生成柱状图、饼图、折线图、雷达图等可视化图表。', 'system');
+        }, 500);
+      }
+      
+      // 加载文件信息
+      const fileInfo = loadFileInfo();
+      if (fileInfo) {
+        currentFilePath = fileInfo.filePath;
+        // 显示文件信息
+        if (chatArea) {
+          const fileElement = document.createElement('div');
+          fileElement.className = 'chat-message system-message';
+          fileElement.innerHTML = `<p>已加载上次会话文件：${fileInfo.filename}</p>`;
+          chatArea.appendChild(fileElement);
+          chatArea.scrollTop = chatArea.scrollHeight;
+        }
+      }
+    });
     
     // 文件上传处理
     const fileUpload = document.getElementById('fileUpload');
@@ -567,6 +682,8 @@
                 const res = JSON.parse(xhr.responseText);
                 if (res.code === 200 && res.data && res.data.file_path) {
                   currentFilePath = res.data.file_path;
+                  // 保存文件信息到localStorage
+                  saveFileInfo(uploadedFile.name, currentFilePath);
                   showMessage(`文件已上传成功：${uploadedFile.name}，可以开始提问了！`, 'system');
                 }
               } catch (e) {}
