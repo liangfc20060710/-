@@ -261,13 +261,25 @@
       <div class="row justify-content-center">
         <div class="col-lg-8">
           <div class="chat-card">
-            <h3 style="background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));-webkit-background-clip: text;-webkit-text-fill-color: transparent; margin-bottom: 25px; font-size: 1.5rem; font-weight: 600;">
+            <h3 id="chatTitle" style="background: linear-gradient(90deg, var(--cyber-pink), var(--cyber-purple));-webkit-background-clip: text;-webkit-text-fill-color: transparent; margin-bottom: 25px; font-size: 1.5rem; font-weight: 600;">
               智能分析助手
             </h3>
             
             <!-- 聊天区域 -->
             <div class="chat-area" id="chatArea">
               <!-- 消息将在这里显示 -->
+            </div>
+            
+            <!-- 重要信息提取区域 -->
+            <div class="mt-4 mb-4">
+              <div class="bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-lg p-4 border border-purple-500/30">
+                <h4 style="color: #fff; font-weight: 600; margin-bottom: 12px; font-size: 1rem; display: flex; align-items: center;">
+                  <i class="fas fa-lightbulb text-yellow-400 mr-2"></i> 重要分析信息
+                </h4>
+                <div id="keyInsights" class="text-white-800" style="line-height: 1.6; font-size: 0.95rem;">
+                  <p class="text-white-50">智能分析助手将在这里展示关键分析结果...</p>
+                </div>
+              </div>
             </div>
             
             <!-- 文件上传和输入区域 -->
@@ -381,6 +393,7 @@
     // localStorage键名
     const STORAGE_KEY = 'experience_chat_data';
     const FILE_INFO_KEY = 'experience_file_info';
+    const COMPANY_NAME_KEY = 'experience_company_name';
     
     // 加载聊天记录
     function loadChatData() {
@@ -452,6 +465,218 @@
       
       // 保存到localStorage
       saveChatData(message, sender);
+      
+      // 如果是系统消息，提取关键信息
+      if (sender === 'system') {
+        extractKeyInsights(message);
+      }
+    }
+    
+    // 提取关键信息
+    function extractKeyInsights(message) {
+      try {
+        const keyInsights = document.getElementById('keyInsights');
+        if (!keyInsights) return;
+        
+        // 提取关键信息
+        let insights = [];
+        
+        // 从消息中提取关键信息
+        if (message.includes('企业名称：')) {
+          const companyNameMatch = message.match(/企业名称：([^<]+)/);
+          if (companyNameMatch) {
+            insights.push(`<strong>企业名称：</strong>${companyNameMatch[1].trim()}`);
+          }
+        }
+        
+        if (message.includes('企业健康评分：')) {
+          const healthScoreMatch = message.match(/企业健康评分：([^<]+)/);
+          if (healthScoreMatch) {
+            insights.push(`<strong>健康评分：</strong>${healthScoreMatch[1].trim()}`);
+          }
+        }
+        
+        if (message.includes('风险预警：')) {
+          const riskMatch = message.match(/风险预警：([^<]+)/);
+          if (riskMatch) {
+            insights.push(`<strong>风险预警：</strong>${riskMatch[1].trim()}`);
+          }
+        }
+        
+        if (message.includes('分析结果：')) {
+          const analysisMatch = message.match(/分析结果：([\s\S]+)/);
+          if (analysisMatch) {
+            let analysisText = analysisMatch[1].trim();
+            // 清理HTML标签
+            analysisText = analysisText.replace(/<[^>]*>/g, '');
+            
+            // 调用大模型API进行深度分析
+            analyzeWithAI(analysisText, keyInsights, insights);
+            return; // 异步处理，不在这里显示
+          }
+        }
+        
+        // 如果有提取到信息，显示在重要信息区域
+        if (insights.length > 0) {
+          keyInsights.innerHTML = `
+            <div class="insights-list">
+              ${insights.map(insight => `<div class="insight-item mb-2">${insight}</div>`).join('')}
+            </div>
+          `;
+        }
+      } catch (e) {
+        console.error('提取关键信息失败:', e);
+      }
+    }
+    
+    // 调用大模型API进行深度分析
+    async function analyzeWithAI(analysisText, keyInsightsElement, basicInsights) {
+      try {
+        // 显示正在分析的状态
+        keyInsightsElement.innerHTML = `
+          <div class="insights-list">
+            ${basicInsights.map(insight => `<div class="insight-item mb-2">${insight}</div>`).join('')}
+            <div class="text-center text-white-50 mt-3">
+              <i class="fas fa-spinner fa-spin mr-2"></i> 正在深度分析...
+            </div>
+          </div>
+        `;
+        
+        const formData = new FormData();
+        formData.append('analysis_text', analysisText);
+        
+        const response = await fetch('/api/analyze_insight', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.code === 200 && result.data) {
+          const data = result.data;
+          
+          // 构建新的重要信息展示
+          let html = '<div class="insights-list">';
+          
+          // 基本信息
+          basicInsights.forEach(insight => {
+            html += `<div class="insight-item mb-2">${insight}</div>`;
+          });
+          
+          // 关键词标签
+          if (data.keywords && data.keywords.length > 0) {
+            html += '<div class="mb-3"><strong style="color: #fff;">关键词：</strong>';
+            data.keywords.forEach(kw => {
+              html += `<span class="badge bg-primary me-1 mb-1">${kw}</span>`;
+            });
+            html += '</div>';
+          }
+          
+          // 关键要点
+          if (data.key_points && data.key_points.length > 0) {
+            html += '<div class="mb-3"><strong style="color: #fff;">关键要点：</strong>';
+            data.key_points.forEach(point => {
+              html += `<div class="text-white-50">• ${point}</div>`;
+            });
+            html += '</div>';
+          }
+          
+          // 风险提示
+          if (data.risk_alerts && data.risk_alerts.length > 0) {
+            html += '<div class="mb-3"><strong style="color: #EF4444;">风险提示：</strong>';
+            data.risk_alerts.forEach(alert => {
+              html += `<div class="text-white-50">⚠️ ${alert}</div>`;
+            });
+            html += '</div>';
+          }
+          
+          // 建议
+          if (data.suggestions && data.suggestions.length > 0) {
+            html += '<div class="mb-3"><strong style="color: #10B981;">建议：</strong>';
+            data.suggestions.forEach(sug => {
+              html += `<div class="text-white-50">💡 ${sug}</div>`;
+            });
+            html += '</div>';
+          }
+          
+          // 一句话总结
+          if (data.summary) {
+            html += `<div class="mt-3 p-2 rounded" style="background: rgba(59,130,246,0.2); border-left: 3px solid #3B82F6;">
+              <strong style="color: #3B82F6;">总结：</strong>
+              <span class="text-white">${data.summary}</span>
+            </div>`;
+          }
+          
+          html += '</div>';
+          keyInsightsElement.innerHTML = html;
+        } else {
+          // 如果API失败，使用智能总结
+          const summary = smartSummarize(analysisText);
+          keyInsightsElement.innerHTML = `
+            <div class="insights-list">
+              ${basicInsights.map(insight => `<div class="insight-item mb-2">${insight}</div>`).join('')}
+              <div class="mt-2"><strong>分析结论：</strong>${summary}</div>
+            </div>
+          `;
+        }
+      } catch (e) {
+        console.error('大模型分析失败:', e);
+        // 使用智能总结作为备选
+        const summary = smartSummarize(analysisText);
+        keyInsightsElement.innerHTML = `
+          <div class="insights-list">
+            ${basicInsights.map(insight => `<div class="insight-item mb-2">${insight}</div>`).join('')}
+            <div class="mt-2"><strong>分析结论：</strong>${summary}</div>
+          </div>
+        `;
+      }
+    }
+    
+    // 智能总结分析结果（备选方案）
+    function smartSummarize(text) {
+      // 清理文本
+      text = text.replace(/\s+/g, ' ').trim();
+      
+      // 提取关键句子
+      const sentences = text.split(/[。！？.!?]/).filter(s => s.trim().length > 10);
+      
+      // 关键词权重
+      const keywords = {
+        '建议': 5,
+        '注意': 4,
+        '问题': 4,
+        '优势': 3,
+        '风险': 5,
+        '机会': 3,
+        '挑战': 4,
+        '增长': 3,
+        '下降': 4,
+        '优化': 4,
+        '改进': 4
+      };
+      
+      // 计算句子权重
+      const weightedSentences = sentences.map(sentence => {
+        let weight = 0;
+        for (const [keyword, score] of Object.entries(keywords)) {
+          if (sentence.includes(keyword)) {
+            weight += score;
+          }
+        }
+        return { sentence, weight };
+      });
+      
+      // 按权重排序并取前3个最重要的句子
+      weightedSentences.sort((a, b) => b.weight - a.weight);
+      const topSentences = weightedSentences.slice(0, 3).map(item => item.sentence);
+      
+      // 生成总结
+      if (topSentences.length > 0) {
+        return topSentences.join('。') + '。';
+      } else {
+        // 如果没有足够的信息，返回精简版本
+        return text.length > 100 ? text.substring(0, 100) + '...' : text;
+      }
     }
     
     // 显示加载状态
@@ -551,10 +776,17 @@
               
               let responseMessage = `
                   <strong>企业名称：</strong>${data.company_name}<br>
-                  <strong>企业健康评分：</strong>${data.health_score || '暂无'}<br>
-                  <strong>风险预警：</strong>${data.risk_warning || '暂无'}<br>
-                  <strong>分析结果：</strong>${data.analysis_result}
               `;
+              
+              // 只在第一次分析文件时显示健康评分
+              if (data.show_health_score && data.health_score) {
+                responseMessage += `
+                  <strong>企业健康评分：</strong>${data.health_score}<br>
+                  <strong>风险预警：</strong>${data.risk_warning || '暂无'}<br>
+                `;
+              }
+              
+              responseMessage += `<strong>分析结果：</strong>${data.analysis_result}`;
               showMessage(responseMessage, 'system');
               
               // 如果用户询问图表相关问题，提供提示
@@ -609,15 +841,22 @@
     window.endSession = function() {
       localStorage.removeItem(STORAGE_KEY);
       localStorage.removeItem(FILE_INFO_KEY);
+      localStorage.removeItem(COMPANY_NAME_KEY);
       const chatArea = document.getElementById('chatArea');
       if (chatArea) {
         chatArea.innerHTML = '';
+      }
+      // 清空重要信息区域
+      const keyInsights = document.getElementById('keyInsights');
+      if (keyInsights) {
+        keyInsights.innerHTML = '<p class="text-white-50">智能分析助手将在这里展示关键分析结果...</p>';
       }
       uploadedFile = null;
       currentFilePath = null;
       companyName = '';
       document.getElementById('companyName').value = '';
       document.getElementById('fileUpload').value = '';
+      updateChatTitle('');  // 重置标题
       setTimeout(function() {
         showMessage('会话已结束，数据已清空。欢迎重新开始！', 'system');
       }, 100);
@@ -659,6 +898,18 @@
           chatArea.scrollTop = chatArea.scrollHeight;
         }
       }
+      
+      // 加载公司名称并更新标题
+      try {
+        const savedCompanyName = localStorage.getItem(COMPANY_NAME_KEY) || '';
+        if (savedCompanyName) {
+          companyName = savedCompanyName;
+          document.getElementById('companyName').value = companyName;
+          updateChatTitle(companyName);
+        }
+      } catch (e) {
+        console.error('加载公司名称失败:', e);
+      }
     });
     
     // 文件上传处理
@@ -694,11 +945,28 @@
       });
     }
     
+    // 更新标题为企业名称
+    function updateChatTitle(name) {
+      const chatTitle = document.getElementById('chatTitle');
+      if (chatTitle && name && name.trim()) {
+        chatTitle.textContent = name + ' - 智能分析助手';
+      } else if (chatTitle) {
+        chatTitle.textContent = '智能分析助手';
+      }
+    }
+    
     // 企业名称输入处理
     const companyNameInput = document.getElementById('companyName');
     if (companyNameInput) {
       companyNameInput.addEventListener('input', function() {
         companyName = this.value;
+        updateChatTitle(companyName);
+        // 保存公司名称到localStorage
+        try {
+          localStorage.setItem(COMPANY_NAME_KEY, companyName);
+        } catch (e) {
+          console.error('保存公司名称失败:', e);
+        }
       });
     }
     

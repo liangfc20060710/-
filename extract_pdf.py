@@ -263,26 +263,55 @@ class PdfProcessor:
             for col in df.columns:
                 col_lower = col.lower()
                 if any(keyword in col_lower for keyword in ['收入', 'revenue', 'sales']):
-                    result["data"]["revenue"] = df[col].dropna().tolist()
+                    result["data"]["revenue"] = df[col].fillna(0).tolist()
                 elif any(keyword in col_lower for keyword in ['利润', 'profit']):
-                    result["data"]["profit"] = df[col].dropna().tolist()
+                    result["data"]["profit"] = df[col].fillna(0).tolist()
                 elif any(keyword in col_lower for keyword in ['成本', 'cost']):
-                    result["data"]["cost"] = df[col].dropna().tolist()
+                    result["data"]["cost"] = df[col].fillna(0).tolist()
                 elif any(keyword in col_lower for keyword in ['资产', 'asset']):
-                    result["data"]["asset"] = df[col].dropna().tolist()
+                    result["data"]["asset"] = df[col].fillna(0).tolist()
                 elif any(keyword in col_lower for keyword in ['负债', 'debt', 'liability']):
-                    result["data"]["debt"] = df[col].dropna().tolist()
+                    result["data"]["debt"] = df[col].fillna(0).tolist()
             
             # 如果没有匹配到，使用数值列
             if not result["data"]:
                 numerical_cols = df.select_dtypes(include=[np.number]).columns.tolist()
-                for i, col in enumerate(numerical_cols[:5]):
-                    labels = ['数据1', '数据2', '数据3', '数据4', '数据5']
-                    result["data"][labels[i]] = df[col].dropna().tolist()
+                for col in numerical_cols[:5]:
+                    # 使用实际的列名作为标签
+                    result["data"][str(col)] = df[col].fillna(0).tolist()
             
             # 获取类别标签（通常是第一列或日期列）
             if len(df) > 0:
                 result["labels"] = df.iloc[:, 0].astype(str).tolist()
+            
+            # 确保所有数据系列长度一致
+            max_length = len(result.get("labels", []))
+            if max_length == 0 and result["data"]:
+                # 如果没有标签，使用第一个数据系列的长度
+                first_key = next(iter(result["data"]), None)
+                if first_key:
+                    max_length = len(result["data"][first_key])
+            
+            # 调整所有数据系列的长度
+            for key in result["data"]:
+                data = result["data"][key]
+                if len(data) > max_length:
+                    # 截断过长的数据
+                    result["data"][key] = data[:max_length]
+                elif len(data) < max_length:
+                    # 填充过短的数据
+                    result["data"][key] = data + [0] * (max_length - len(data))
+            
+            # 确保标签长度与数据长度匹配
+            if len(result.get("labels", [])) < max_length:
+                # 填充标签
+                current_labels = result.get("labels", [])
+                for i in range(len(current_labels), max_length):
+                    current_labels.append(f"项目{i+1}")
+                result["labels"] = current_labels
+            elif len(result.get("labels", [])) > max_length:
+                # 截断标签
+                result["labels"] = result["labels"][:max_length]
             
             return result
         except Exception as e:

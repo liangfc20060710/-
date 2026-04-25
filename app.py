@@ -84,9 +84,14 @@ def analyze_excel():
                 else:
                     analysis_result = "PDF文件已成功上传，请提出具体问题以获取分析结果。"
 
-                health_score = 90
+                # 生成模拟财务数据用于评分
+                financial_data = generate_financial_data()
+                health_score = calculate_health_score(analysis_result, user_message, financial_data)
                 risk_warning = "无重大风险"
                 stored_file_path = file_path
+                
+                # 标记为文件分析，需要显示健康评分
+                show_health_score = True
             else:
                 # 处理文件
                 filename = secure_filename(file.filename)
@@ -106,13 +111,18 @@ def analyze_excel():
                 else:
                     analysis_result = "文件已成功上传，请提出具体问题以获取分析结果。"
 
-                health_score = 92
+                # 生成财务数据用于评分
+                financial_data = generate_financial_data()
+                health_score = calculate_health_score(analysis_result, user_message, financial_data)
                 risk_warning = "无重大风险"
+                
+                # 标记为文件分析，需要显示健康评分
+                show_health_score = True
 
         except Exception as e:
             return jsonify({"code": 500, "msg": f"分析失败：{str(e)}"}), 500
     else:
-        # 纯消息分析（智能对话）
+        # 纯消息分析（智能对话）- 不显示健康评分
         try:
             # 生成模拟财务数据用于可视化
             financial_data = generate_financial_data()
@@ -123,31 +133,42 @@ def analyze_excel():
                 try:
                     # 使用analyze_document方法进行智能对话
                     analysis_result = processor.analyze_document("conversation", user_message, file_type="conversation")
-                    health_score = 90
-                    risk_warning = "无重大风险"
+                    # 纯对话不显示健康评分
+                    health_score = None
+                    risk_warning = None
+                    show_health_score = False
                 except Exception as e:
                     # 如果处理器调用失败，使用默认分析
                     print(f"智能体对话失败: {e}")
                     if '成本' in user_message:
                         analysis_result = "成本分析显示，原材料成本占比最高，建议优化采购策略降低成本。"
-                        health_score = 88
-                        risk_warning = "成本控制存在一定风险"
+                        # 纯对话不显示健康评分
+                        health_score = None
+                        risk_warning = None
+                        show_health_score = False
                     elif '资产' in user_message:
                         analysis_result = "资产结构分析显示，流动资产占比合理，固定资产投资适中。"
-                        health_score = 90
-                        risk_warning = "无重大风险"
+                        # 纯对话不显示健康评分
+                        health_score = None
+                        risk_warning = None
+                        show_health_score = False
                     elif '利润' in user_message:
                         analysis_result = "利润分析显示，净利润增长率为15%，高于行业平均水平。"
-                        health_score = 95
-                        risk_warning = "无重大风险"
+                        # 纯对话不显示健康评分
+                        health_score = None
+                        risk_warning = None
+                        show_health_score = False
                     else:
                         analysis_result = "根据您的问题，我们分析了企业的整体财务状况，各项指标均表现良好。"
-                        health_score = 92
-                        risk_warning = "无重大风险"
+                        # 纯对话不显示健康评分
+                        health_score = None
+                        risk_warning = None
+                        show_health_score = False
             else:
                 analysis_result = "欢迎使用企业数字大脑智能分析助手，请上传文件或提出具体问题。"
-                health_score = 85
-                risk_warning = "暂无风险评估"
+                health_score = None
+                risk_warning = None
+                show_health_score = False
 
         except Exception as e:
             return jsonify({"code": 500, "msg": f"分析失败：{str(e)}"}), 500
@@ -158,13 +179,168 @@ def analyze_excel():
         "data": {
             "company_name": company_name,
             "analysis_result": analysis_result,
-            "health_score": health_score,
-            "risk_warning": risk_warning,
+            "health_score": health_score if show_health_score else None,
+            "risk_warning": risk_warning if show_health_score else None,
+            "show_health_score": show_health_score,
             "financial_data": financial_data,
             "file_path": stored_file_path if 'stored_file_path' in dir() else None
         }
     })
 
+
+# 智能健康评分计算函数
+def calculate_health_score(analysis_result, user_message, financial_data=None):
+    """基于分析内容和数据智能计算企业健康评分"""
+    score = 70  # 基础分数
+    
+    # 分析内容关键词加分/减分
+    positive_keywords = {
+        '良好': 5, '优秀': 8, '增长': 4, '上升': 3, '盈利': 6, '利润': 5,
+        '合理': 3, '优化': 4, '创新': 3, '稳健': 4, '健康': 6, '强': 4
+    }
+    
+    negative_keywords = {
+        '风险': -5, '下降': -4, '亏损': -8, '问题': -4, '挑战': -3, '不足': -3,
+        '压力': -4, '危机': -10, '困难': -5, '警告': -6, '隐患': -4
+    }
+    
+    # 分析用户问题类型
+    question_types = {
+        '成本': lambda: analyze_cost_health(analysis_result),
+        '资产': lambda: analyze_asset_health(analysis_result),
+        '利润': lambda: analyze_profit_health(analysis_result),
+        '财务': lambda: analyze_financial_health(analysis_result),
+        '风险': lambda: analyze_risk_health(analysis_result)
+    }
+    
+    # 根据分析内容调整分数
+    analysis_lower = analysis_result.lower()
+    for keyword, value in positive_keywords.items():
+        if keyword in analysis_lower:
+            score += value
+    
+    for keyword, value in negative_keywords.items():
+        if keyword in analysis_lower:
+            score += value
+    
+    # 根据问题类型进行专项分析
+    for key, analyzer in question_types.items():
+        if key in user_message:
+            score = analyzer()
+            break
+    
+    # 如果有财务数据，基于数据计算
+    if financial_data:
+        score = adjust_score_by_data(score, financial_data)
+    
+    # 确保分数在0-100之间
+    return max(0, min(100, score))
+
+
+def analyze_cost_health(analysis_result):
+    """分析成本健康度"""
+    score = 80
+    analysis_lower = analysis_result.lower()
+    
+    if '成本控制' in analysis_lower or '优化成本' in analysis_lower:
+        score += 10
+    if '成本上升' in analysis_lower or '成本增加' in analysis_lower:
+        score -= 15
+    if '成本合理' in analysis_lower:
+        score += 5
+    
+    return score
+
+def analyze_asset_health(analysis_result):
+    """分析资产健康度"""
+    score = 85
+    analysis_lower = analysis_result.lower()
+    
+    if '资产结构合理' in analysis_lower:
+        score += 10
+    if '资产负债率' in analysis_lower and '高' in analysis_lower:
+        score -= 15
+    if '流动资产充足' in analysis_lower:
+        score += 8
+    
+    return score
+
+def analyze_profit_health(analysis_result):
+    """分析利润健康度"""
+    score = 90
+    analysis_lower = analysis_result.lower()
+    
+    if '利润增长' in analysis_lower or '盈利增加' in analysis_lower:
+        score += 8
+    if '利润下降' in analysis_lower or '亏损' in analysis_lower:
+        score -= 20
+    if '利润率' in analysis_lower and '高' in analysis_lower:
+        score += 5
+    
+    return score
+
+def analyze_financial_health(analysis_result):
+    """分析整体财务健康度"""
+    score = 82
+    analysis_lower = analysis_result.lower()
+    
+    if '财务状况良好' in analysis_lower:
+        score += 10
+    if '财务风险' in analysis_lower:
+        score -= 15
+    if '财务稳健' in analysis_lower:
+        score += 8
+    
+    return score
+
+def analyze_risk_health(analysis_result):
+    """分析风险健康度"""
+    score = 75
+    analysis_lower = analysis_result.lower()
+    
+    if '无重大风险' in analysis_lower:
+        score += 15
+    if '风险预警' in analysis_lower:
+        score -= 20
+    if '风险可控' in analysis_lower:
+        score += 10
+    
+    return score
+
+def adjust_score_by_data(base_score, financial_data):
+    """基于财务数据调整分数"""
+    if not financial_data:
+        return base_score
+    
+    # 分析收入增长趋势
+    if 'revenue' in financial_data:
+        revenue = financial_data['revenue']
+        if len(revenue) >= 2:
+            growth_rate = (revenue[-1] - revenue[0]) / revenue[0]
+            if growth_rate > 0.3:
+                base_score += 10
+            elif growth_rate > 0.1:
+                base_score += 5
+            elif growth_rate < -0.1:
+                base_score -= 15
+    
+    # 分析利润率
+    if 'revenue' in financial_data and 'profit' in financial_data:
+        revenue = financial_data['revenue']
+        profit = financial_data['profit']
+        if revenue and profit:
+            avg_revenue = sum(revenue) / len(revenue)
+            avg_profit = sum(profit) / len(profit)
+            if avg_revenue > 0:
+                profit_margin = avg_profit / avg_revenue
+                if profit_margin > 0.2:
+                    base_score += 10
+                elif profit_margin > 0.1:
+                    base_score += 5
+                elif profit_margin < 0:
+                    base_score -= 20
+    
+    return base_score
 
 # 生成模拟财务数据
 import random
@@ -228,6 +404,93 @@ def get_chart_data():
         return jsonify({
             "code": 500,
             "msg": f"获取图表数据失败：{str(e)}"
+        }), 500
+
+
+# 5. 智能分析接口 - 使用大模型分析对话内容
+@app.route('/api/analyze_insight', methods=['POST'])
+def analyze_insight():
+    """使用大模型分析对话内容，提取关键信息"""
+    try:
+        analysis_text = request.form.get('analysis_text', '')
+        
+        if not analysis_text:
+            return jsonify({
+                "code": 400,
+                "msg": "分析内容不能为空"
+            }), 400
+        
+        # 调用大模型进行智能分析
+        prompt = f"""请分析以下企业财务分析内容，提取并生成结构化的关键信息：
+
+分析内容：
+{analysis_text}
+
+请按以下JSON格式返回分析结果（只返回JSON，不要其他内容）：
+{{
+    "keywords": ["关键词1", "关键词2", "关键词3", "关键词4", "关键词5"],
+    "key_points": ["要点1", "要点2", "要点3"],
+    "risk_alerts": ["风险提示1", "风险提示2"],
+    "suggestions": ["建议1", "建议2"],
+    "summary": "一句话总结"
+}}"""
+        
+        try:
+            response = processor.client.chat.completions.create(
+                model="glm-4",
+                messages=[
+                    {"role": "system", "content": "你是一个专业的企业财务分析助手，擅长提取关键信息和生成结构化分析结果。"},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.3,
+                max_tokens=800
+            )
+            result_text = response.choices[0].message.content
+            
+            # 尝试解析JSON结果
+            import json
+            import re
+            
+            # 清理返回内容，提取JSON
+            json_match = re.search(r'\{[\s\S]*\}', result_text)
+            if json_match:
+                result_json = json.loads(json_match.group())
+                return jsonify({
+                    "code": 200,
+                    "msg": "分析成功",
+                    "data": result_json
+                })
+            else:
+                return jsonify({
+                    "code": 200,
+                    "msg": "分析成功",
+                    "data": {
+                        "keywords": ["企业分析"],
+                        "key_points": [analysis_text[:100] + "..."],
+                        "risk_alerts": [],
+                        "suggestions": ["建议关注企业整体运营状况"],
+                        "summary": analysis_text[:50] + "..."
+                    }
+                })
+                
+        except Exception as e:
+            print(f"大模型分析失败: {e}")
+            return jsonify({
+                "code": 200,
+                "msg": "分析成功",
+                "data": {
+                    "keywords": ["企业分析", "财务数据"],
+                    "key_points": [analysis_text[:100] + "..."],
+                    "risk_alerts": ["注意成本控制"],
+                    "suggestions": ["建议优化资产结构"],
+                    "summary": analysis_text[:50] + "..."
+                }
+            })
+            
+    except Exception as e:
+        return jsonify({
+            "code": 500,
+            "msg": f"分析失败：{str(e)}"
         }), 500
 
 
